@@ -1,0 +1,139 @@
+﻿@model SchoolWeb.Models.RegisterStudentViewModel
+@{
+    ViewData["Title"] = "Register Student";
+}
+
+<br>
+<br>
+<h3 class="text-center">Register Student</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-12 offset-md-2">
+        <form method="post" enctype="multipart/form-data">
+            <div class="container">
+                <div class="row">
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="FirstName">First Name</label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="LastName">Last Name</label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="GenderId" class="control-label"></label>
+                        <select asp-for="GenderId" asp-items="Model.Genders" class="form-control"></select>
+                        <span asp-validation-for="GenderId" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="QualificationId" class="control-label"></label>
+                        <select asp-for="QualificationId" asp-items="Model.Qualifications" class="form-control"></select>
+                        <span asp-validation-for="QualificationId" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="CcNumber">CC Number</label>
+                        <input asp-for="CcNumber" class="form-control" />
+                        <span asp-validation-for="CcNumber" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="BirthDate" class="control-label"></label>
+                        <div class="input-group date" data-provide="datepicker">
+                            <input type="text" asp-for="BirthDate" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="BirthDate" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="Address">Address</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="City">City</label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="PhoneNumber">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="Email">Email</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="Password">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="Confirm">Confirm</label>
+                        <input asp-for="Confirm" type="password" class="form-control" />
+                        <span asp-validation-for="Confirm" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4 span6">
+                        <label asp-for="PictureFile" class="control-label"></label>
+                        <input asp-for="PictureFile" class="form-control" type="file" accept="image/*" />
+                        <span asp-validation-for="PictureFile" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-4 span6 align-self-end">
+                        <div class="form-check">
+                            <input asp-for="UseAsProfilePic" type="checkbox" class="form-check-input" />
+                            <label asp-for="UseAsProfilePic" class="form-check-label">Use as profile picture?</label>
+                        </div>
+                        <span asp-validation-for="UseAsProfilePic" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 offset-md-2">
+                        <div class="form-group text-center">
+                            <input type="submit" value="Register Student" class="btn btn-secondary" />
+                        </div>
+                        <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+<div class="text-success text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        document.getElementById("BirthDate").value = "";
+        $('.date').datepicker({
+            format: 'dd/mm/yyyy',
+            orientation: "bottom",
+            autoclose: true
+        });
+    </script>
+}
