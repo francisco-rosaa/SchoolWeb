@@ -5,10 +5,8 @@ using SchoolWeb.Data.Entities;
 
 namespace SchoolWeb.Data
 {
-    public interface IQualificationRepository
+    public interface IQualificationRepository : IGenericRepository<Qualification>
     {
-        Task<Qualification> GetQualificationByIdAsync(int id);
-
         Task<Qualification> GetQualificationByNameAsync(string name);
 
         Task AddQualificationAsync(string name);        

@@ -10,7 +10,7 @@ using SchoolWeb.Data;
 namespace SchoolWeb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210817181214_InitDb")]
+    [Migration("20210820152531_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -495,6 +495,9 @@ namespace SchoolWeb.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<bool>("PasswordAltered")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -506,11 +509,11 @@ namespace SchoolWeb.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PictureId")
+                    b.Property<string>("Picture")
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<string>("ProfilePictureId")
+                    b.Property<string>("ProfilePicture")
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 

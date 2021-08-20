@@ -17,11 +17,6 @@ namespace SchoolWeb.Data
             _context = context;
         }
 
-        public async Task<Qualification> GetQualificationByIdAsync(int id)
-        {
-            return await _context.Qualifications.FindAsync(id);
-        }
-
         public async Task<Qualification> GetQualificationByNameAsync(string name)
         {
             return await _context.Qualifications.Where(x => x.Name == name).FirstOrDefaultAsync();

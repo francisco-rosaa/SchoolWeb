@@ -5,10 +5,8 @@ using SchoolWeb.Data.Entities;
 
 namespace SchoolWeb.Data
 {
-    public interface IGenderRepository
+    public interface IGenderRepository : IGenericRepository<Gender>
     {
-        Task<Gender> GetGenderByIdAsync(int id);
-
         Task<Gender> GetGenderByNameAsync(string name);
 
         Task AddGenderAsync(string name);

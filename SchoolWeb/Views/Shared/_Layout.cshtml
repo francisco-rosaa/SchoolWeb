@@ -24,6 +24,17 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Users</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="RegisterUser">Register</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="EditUser">Edit</a></li>
+                                </ul>
+                            </li>
+                        }
+
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
                         {
                             <li class="nav-item dropdown">

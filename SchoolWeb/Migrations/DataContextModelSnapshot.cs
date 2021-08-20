@@ -493,6 +493,9 @@ namespace SchoolWeb.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<bool>("PasswordChanged")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -504,11 +507,11 @@ namespace SchoolWeb.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PictureId")
+                    b.Property<string>("Picture")
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<string>("ProfilePictureId")
+                    b.Property<string>("ProfilePicture")
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 

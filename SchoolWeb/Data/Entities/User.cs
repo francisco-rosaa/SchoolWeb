@@ -82,19 +82,23 @@ namespace SchoolWeb.Data.Entities
         public string Picture { get; set; }
 
 
+        [Required]
+        public bool PasswordChanged { get; set; } = false;
+
+
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
 
 
         [Display(Name = "Profile Picture Path")]
         public string ProfilePicturePath => ProfilePicture == null
-            ? $"~/images/pictures/_nopicture.jpg"
+            ? $"~/images/pictures/00000000-0000-0000-0000-000000000000"
             : $"~/images/pictures/{ProfilePicture}";
 
 
         [Display(Name = "Picture Path")]
         public string PicturePath => Picture == null
-            ? $"~/images/pictures/_nopicture.jpg"
+            ? $"~/images/pictures/00000000-0000-0000-0000-000000000000"
             : $"~/images/pictures/{Picture}";
     }
 }

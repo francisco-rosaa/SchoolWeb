@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Models;
 
@@ -21,22 +23,30 @@ namespace SchoolWeb.Helpers
 
         Task CheckRoleAsync(string roleName);
 
+        Task<string> GetRoleByIdAsync(string roleId);
+
         Task AddUserToRoleAsync(User user, string roleName);
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
 
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
 
+        Task<bool> IsPasswordChangedAsync(string username);
+
+        Task<bool> ConfirmPasswordChangedAsync(string userId);
+
         Task<string> GenerateEmailConfirmationTokenAsync(User user);
 
         Task<IdentityResult> ConfirmEmailAsync(User user, string token);
 
-        Task<bool> IsEmailConfirmed(string username);
+        Task<bool> IsEmailConfirmedAsync(string username);
 
         Task<User> GetUserByIdAsync(string userId);
 
         Task<string> GeneratePasswordResetTokenAsync(User user);
 
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
+
+        IEnumerable<SelectListItem> GetComboRoles();
     }
 }

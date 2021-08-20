@@ -41,7 +41,7 @@ namespace SchoolWeb.Data
             await AddUserStudentAsync();
         }
 
-        public async Task AddRolesAsync()
+        private async Task AddRolesAsync()
         {
             await _userHelper.CheckRoleAsync("Admin");
             await _userHelper.CheckRoleAsync("Staff");
@@ -68,7 +68,7 @@ namespace SchoolWeb.Data
             await _qualificationRepository.AddQualificationAsync("Level 8");
         }
 
-        public async Task AddUserAdminAsync()
+        private async Task AddUserAdminAsync()
         {
             var userAdmin = await _userHelper.GetUserByEmailAsync("admin@gmail.com");
 
@@ -86,7 +86,8 @@ namespace SchoolWeb.Data
                     Address = "Sunset Street, 7",
                     City = "Lisbon",
                     PhoneNumber = "+351210123456",
-                    Email = "admin@gmail.com"
+                    Email = "admin@gmail.com",
+                    PasswordChanged = true
                 };
 
                 await AddUserWithRoleAsync(userAdmin, "Admin");
@@ -95,7 +96,7 @@ namespace SchoolWeb.Data
             await IsUserInRole(userAdmin, "Admin");
         }
 
-        public async Task AddUserStaffAsync()
+        private async Task AddUserStaffAsync()
         {
             var userStaff = await _userHelper.GetUserByEmailAsync("staff@gmail.com");
 
@@ -113,7 +114,8 @@ namespace SchoolWeb.Data
                     Address = "Dark Alley, 9",
                     City = "Lisbon",
                     PhoneNumber = "+351210456789",
-                    Email = "staff@gmail.com"
+                    Email = "staff@gmail.com",
+                    PasswordChanged = true
                 };
 
                 await AddUserWithRoleAsync(userStaff, "Staff");
@@ -122,7 +124,7 @@ namespace SchoolWeb.Data
             await IsUserInRole(userStaff, "Staff");
         }
 
-        public async Task AddUserStudentAsync()
+        private async Task AddUserStudentAsync()
         {
             var userStudent = await _userHelper.GetUserByEmailAsync("student@gmail.com");
 
@@ -140,7 +142,8 @@ namespace SchoolWeb.Data
                     Address = "Sunshine Street, 1",
                     City = "Lisbon",
                     PhoneNumber = "+351210789123",
-                    Email = "student@gmail.com"
+                    Email = "student@gmail.com",
+                    PasswordChanged = true
                 };
 
                 await AddUserWithRoleAsync(userStudent, "Student");
@@ -149,7 +152,7 @@ namespace SchoolWeb.Data
             await IsUserInRole(userStudent, "Student");
         }
 
-        public async Task AddUserWithRoleAsync(User user, string role)
+        private async Task AddUserWithRoleAsync(User user, string role)
         {
             var result = await _userHelper.AddUserAsync(user, "!Admin1");
 
@@ -164,7 +167,7 @@ namespace SchoolWeb.Data
             await _userHelper.ConfirmEmailAsync(user, myToken);
         }
 
-        public async Task IsUserInRole(User user, string role)
+        private async Task IsUserInRole(User user, string role)
         {
             var isUserInRole = await _userHelper.IsUserInRoleAsync(user, role);
 

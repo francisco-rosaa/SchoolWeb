@@ -17,11 +17,6 @@ namespace SchoolWeb.Data
             _context = context;
         }
 
-        public async Task<Gender> GetGenderByIdAsync(int id)
-        {
-            return await _context.Genders.FindAsync(id);
-        }
-
         public async Task<Gender> GetGenderByNameAsync(string name)
         {
             return await _context.Genders.Where(x => x.Name == name).FirstOrDefaultAsync();

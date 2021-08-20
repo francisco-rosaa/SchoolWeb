@@ -177,6 +177,7 @@ namespace SchoolWeb.Migrations
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     ProfilePicture = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
                     Picture = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    PasswordChanged = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
