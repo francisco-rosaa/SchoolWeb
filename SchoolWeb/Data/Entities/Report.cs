@@ -25,6 +25,11 @@ namespace SchoolWeb.Data.Entities
         public string Message { get; set; }
 
 
+        [Required(ErrorMessage = "{0} is required")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
+        public DateTime Date { get; set; }
+
+
         public bool? Solved { get; set; }
 
 

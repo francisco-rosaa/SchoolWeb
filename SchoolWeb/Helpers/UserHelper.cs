@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -95,6 +96,16 @@ namespace SchoolWeb.Helpers
             return await _userManager.IsInRoleAsync(user, roleName);
         }
 
+        public async Task<string> GetUserRoleAsync(string userId)
+        {
+            var roleId = _context.UserRoles
+                .Where(x => x.UserId == userId)
+                .Select(x => x.RoleId)
+                .FirstOrDefaultAsync();
+
+            return await GetRoleByIdAsync(roleId.Result.ToString());
+        }
+
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
         {
             return await _signInManager.CheckPasswordSignInAsync(user, password, false);
@@ -153,6 +164,46 @@ namespace SchoolWeb.Helpers
         public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
         {
             return await _userManager.ResetPasswordAsync(user, token, password);
+        }
+
+        public async Task<string> GetUserProfilePictureAsync(string userId)
+        {
+            return await _context.Users
+                .Where(x => x.Id == userId)
+                .Select(x => x.ProfilePicture)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<string> GetUserPictureAsync(string userId)
+        {
+            return await _context.Users
+                .Where(x => x.Id == userId)
+                .Select(x => x.Picture)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task DeletePictureAsync(string pictureName)
+        {
+            var fullPath = Path.Combine
+                (
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot\\images\\pictures",
+                    pictureName
+                );
+
+            if (File.Exists(fullPath))
+            {
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        File.Delete(fullPath);
+                    });
+                }
+                catch
+                {
+                }
+            }
         }
 
         public IEnumerable<SelectListItem> GetComboRoles()

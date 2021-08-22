@@ -1,19 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using SchoolWeb.Helpers;
+using System.Threading.Tasks;
 
 namespace SchoolWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IUserHelper _userHelper;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IUserHelper userHelper)
         {
-            _logger = logger;
+            _userHelper = userHelper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                if (user != null)
+                {
+                    TempData["SessionUserProfilePicture"] = user.ProfilePicturePath;
+                    TempData["SessionUserFirstName"] = user.FirstName;
+                }
+            }
+
             return View();
         }
 

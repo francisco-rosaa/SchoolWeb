@@ -78,7 +78,7 @@ namespace SchoolWeb.Data
                 {
                     UserName = "admin@gmail.com",
                     FirstName = "James",
-                    LastName = "Admin",
+                    LastName = "Dean",
                     GenderId = _context.Genders.Where(x => x.Name == "Male").FirstOrDefault().Id,
                     QualificationId = _context.Qualifications.Where(x => x.Name == "Level 6").FirstOrDefault().Id,
                     CcNumber = "1234567890",
@@ -106,7 +106,7 @@ namespace SchoolWeb.Data
                 {
                     UserName = "staff@gmail.com",
                     FirstName = "Karen",
-                    LastName = "Staff",
+                    LastName = "Gillan",
                     GenderId = _context.Genders.Where(x => x.Name == "Female").FirstOrDefault().Id,
                     QualificationId = _context.Qualifications.Where(x => x.Name == "Level 4").FirstOrDefault().Id,
                     CcNumber = "4567890123",
@@ -133,8 +133,8 @@ namespace SchoolWeb.Data
                 userStudent = new User
                 {
                     UserName = "student@gmail.com",
-                    FirstName = "Frank",
-                    LastName = "Student",
+                    FirstName = "Frankie",
+                    LastName = "Muniz",
                     GenderId = _context.Genders.Where(x => x.Name == "Not Specified").FirstOrDefault().Id,
                     QualificationId = _context.Qualifications.Where(x => x.Name == "Entry Level").FirstOrDefault().Id,
                     CcNumber = "7890123456",

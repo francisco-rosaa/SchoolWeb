@@ -71,7 +71,7 @@ namespace SchoolWeb.Controllers
                         else
                         {
                             ViewBag.ErrorTitle = "Password Not Changed";
-                            ViewBag.ErrorMessage = "Please access your email account and follow the link to activate your account";
+                            ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
 
                             await _userHelper.LogOutAsync();
                             return View("Error");
@@ -80,7 +80,7 @@ namespace SchoolWeb.Controllers
                     else
                     {
                         ViewBag.ErrorTitle = "Email Not Confirmed";
-                        ViewBag.ErrorMessage = "Please access your email account and follow the link to activate your account";
+                        ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
 
                         await _userHelper.LogOutAsync();
                         return View("Error");
@@ -128,14 +128,13 @@ namespace SchoolWeb.Controllers
                 if (user == null)
                 {
                     // Picture
-                    Guid pictureName = Guid.Empty;
-                    bool pictureExists = false;
+                    string pictureName = string.Empty;
 
                     if (model.ProfilePictureFile != null && model.ProfilePictureFile.Length > 0)
                     {
-                        pictureName = Guid.NewGuid();
-                        await SaveUploadedPicture(model.ProfilePictureFile, pictureName.ToString());
-                        pictureExists = true;
+                        pictureName = Guid.NewGuid() + Path.GetExtension(model.ProfilePictureFile.FileName);
+
+                        await SaveUploadedPicture(model.ProfilePictureFile, pictureName);
                     }
 
                     // User
@@ -152,7 +151,7 @@ namespace SchoolWeb.Controllers
                         PhoneNumber = model.PhoneNumber,
                         Email = model.Email,
                         UserName = model.Email,
-                        ProfilePicture = pictureExists ? pictureName.ToString() : null,
+                        ProfilePicture = pictureName != string.Empty ? pictureName : null,
                         PasswordChanged = false
                     };
 
@@ -168,14 +167,14 @@ namespace SchoolWeb.Controllers
                     string role = await _userHelper.GetRoleByIdAsync(model.RoleId);
                     await AddUserToRoleAsync(user, role);
 
-                    string message = "Registration successful";
+                    string message = "<span class=\"text-success\">Registration successful</span>";
 
                     // Email
-                    Response response = await GenerateAndSendEmailAsync(user, model.Email, model.FullName);
+                    Response response = await SendRegistrationEmailAsync(user, model.Email, model.FullName);
 
                     if (response.IsSuccess)
                     {
-                        message += "<br />Email sent";
+                        message += "<span class=\"text-success\">Email sent</span>";
                         return RedirectToAction("RegisterUser", "Account", new { message });
                     }
 
@@ -223,12 +222,21 @@ namespace SchoolWeb.Controllers
                 if (user == null)
                 {
                     // Picture
-                    Guid pictureName = Guid.Empty;
-                    
+                    string profilePictureName = string.Empty;
+                    string pictureName = string.Empty;
+
                     if (model.PictureFile != null && model.PictureFile.Length > 0)
                     {
-                        pictureName = Guid.NewGuid();
-                        await SaveUploadedPicture(model.PictureFile, pictureName.ToString());
+                        pictureName = Guid.NewGuid() + Path.GetExtension(model.PictureFile.FileName);
+
+                        await SaveUploadedPicture(model.PictureFile, pictureName);
+
+                        if (model.UseAsProfilePic)
+                        {
+                            profilePictureName = Guid.NewGuid() + Path.GetExtension(model.PictureFile.FileName);
+
+                            await SaveUploadedPicture(model.PictureFile, profilePictureName);
+                        }
                     }
 
                     // User
@@ -245,8 +253,8 @@ namespace SchoolWeb.Controllers
                         PhoneNumber = model.PhoneNumber,
                         Email = model.Email,
                         UserName = model.Email,
-                        ProfilePicture = model.UseAsProfilePic ? pictureName.ToString() : null,
-                        Picture = pictureName.ToString(),
+                        ProfilePicture = model.UseAsProfilePic ? profilePictureName : null,
+                        Picture = pictureName,
                         PasswordChanged = false
                     };
 
@@ -261,14 +269,14 @@ namespace SchoolWeb.Controllers
                     // Role
                     await AddUserToRoleAsync(user, "Student");
 
-                    string message = "Registration successful";
+                    string message = "<span class=\"text-success\">Registration successful</span>";
 
                     // Email
-                    Response response = await GenerateAndSendEmailAsync(user, model.Email, model.FullName);
+                    Response response = await SendRegistrationEmailAsync(user, model.Email, model.FullName);
 
                     if (response.IsSuccess)
                     {
-                        message += "<br />Email sent";
+                        message += "<br /><span class=\"text-success\">Email sent</span>";
                         return RedirectToAction("RegisterStudent", "Account", new { message });
                     }
 
@@ -314,7 +322,7 @@ namespace SchoolWeb.Controllers
             }
         }
 
-        private async Task<Response> GenerateAndSendEmailAsync(User user, string email, string fullName)
+        private async Task<Response> SendRegistrationEmailAsync(User user, string email, string fullName)
         {
             string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
 
@@ -331,12 +339,140 @@ namespace SchoolWeb.Controllers
                     email,
                     "Activate Account",
                     "<h3>Activate SchoolWeb Account</h3>" +
-                    $"<p>Dear {fullName}, you are now registered at SchoolWeb.<p>" +
-                    $"<p>Please click <a href=\"{tokenLink}\">here</a> to activate your account." +
-                    "<p>Thank you.<p>"
+                    $"<p>Dear {fullName}, you are now registered at SchoolWeb.</p>" +
+                    $"<p>Please click <a href=\"{tokenLink}\">here</a> to activate your account.</p>" +
+                    "<p>Thank you.</p>"
                 );
 
             return response;
+        }
+
+        public async Task<IActionResult> EditProfile(string message)
+        {
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.Message = message;
+            }
+
+            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+            var model = new EditProfileViewModel
+            {
+                Genders = _genderRepository.GetComboGenders(),
+                Qualifications = _qualificationRepository.GetComboQualifications(),
+                Role = await _userHelper.GetUserRoleAsync(user.Id)
+            };
+
+            if (user != null)
+            {
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.GenderId = user.GenderId;
+                model.QualificationId = user.QualificationId;
+                model.CcNumber = user.CcNumber;
+                model.BirthDate = user.BirthDate;
+                model.Address = user.Address;
+                model.City = user.City;
+                model.PhoneNumber = user.PhoneNumber;                
+                model.ProfilePicturePath = user.ProfilePicturePath;
+                model.PicturePath = user.PicturePath;
+                model.Email = user.Email;
+
+                TempData["SessionUserProfilePicture"] = user.ProfilePicturePath;
+                TempData["SessionUserFirstName"] = user.FirstName;
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+        {
+            string message = string.Empty;
+
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                if (user != null)
+                {
+                    string profilePictureName = string.Empty;
+                    string pictureName = string.Empty;
+                    string oldProfilePictureName = string.Empty;
+                    string oldPictureName = string.Empty;
+
+                    if (model.ProfilePictureFile != null && model.ProfilePictureFile.Length > 0)
+                    {
+                        profilePictureName = Guid.NewGuid() + Path.GetExtension(model.ProfilePictureFile.FileName);
+
+                        await SaveUploadedPicture(model.ProfilePictureFile, profilePictureName);
+
+                        oldProfilePictureName = await _userHelper.GetUserProfilePictureAsync(user.Id);
+                    }
+
+                    if (model.PictureFile != null && model.PictureFile.Length > 0)
+                    {
+                        pictureName = Guid.NewGuid() + Path.GetExtension(model.PictureFile.FileName);
+
+                        await SaveUploadedPicture(model.PictureFile, pictureName);
+
+                        oldPictureName = await _userHelper.GetUserPictureAsync(user.Id);
+                    }
+
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.GenderId = model.GenderId;
+                    user.QualificationId = model.QualificationId;
+                    user.CcNumber = model.CcNumber;
+                    user.BirthDate = model.BirthDate;
+                    user.Address = model.Address;
+                    user.City = model.City;
+                    user.PhoneNumber = model.PhoneNumber;
+
+                    if (!string.IsNullOrEmpty(profilePictureName))
+                    {
+                        user.ProfilePicture = profilePictureName;
+                    }
+
+                    if (!string.IsNullOrEmpty(pictureName))
+                    {
+                        user.Picture = pictureName;
+                    }
+
+                    var response = await _userHelper.UpdateUserAsync(user);
+
+                    if (response.Succeeded)
+                    {
+                        if (!string.IsNullOrEmpty(oldProfilePictureName))
+                        {
+                            await _userHelper.DeletePictureAsync(oldProfilePictureName);
+                        }
+
+                        if (!string.IsNullOrEmpty(oldPictureName))
+                        {
+                            await _userHelper.DeletePictureAsync(oldPictureName);
+                        }
+
+                        message = "User profile updated";
+
+                        if (!string.IsNullOrEmpty(profilePictureName))
+                        {
+                            message += "<br />Profile picture updated";
+                        }
+
+                        if (!string.IsNullOrEmpty(pictureName))
+                        {
+                            message += "<br />Student picture updated";
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                    }
+                }
+            }
+
+            return RedirectToAction("EditProfile", "Account", new { message });
         }
 
         public async Task<IActionResult> ActivateAccount(string userId, string token)
@@ -381,9 +517,9 @@ namespace SchoolWeb.Controllers
                 {
                     string emailMessage = await _userHelper.IsEmailConfirmedAsync(user.Email) ? "Email confirmed" : "Email not confirmed";
 
-                    var token = await _userHelper.GeneratePasswordResetTokenAsync(user);
+                    var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
 
-                    var resetResult = await _userHelper.ResetPasswordAsync(user, token, model.Password);
+                    var resetResult = await _userHelper.ResetPasswordAsync(user, myToken, model.Password);
 
                     if (resetResult.Succeeded)
                     {
@@ -391,7 +527,7 @@ namespace SchoolWeb.Controllers
 
                         if (passChanged)
                         {
-                            ViewBag.Message = "Password changed successfully";
+                            ViewBag.Message = "<span class=\"text-success\">Password changed successfully</span>";
                             ViewBag.MessageEmail = emailMessage;
                             return View();
                         }
@@ -411,10 +547,86 @@ namespace SchoolWeb.Controllers
                 }
                 else
                 {
-                    this.ModelState.AddModelError(string.Empty, "User not found");
+                    ModelState.AddModelError(string.Empty, "User not found");
                 }
             }
 
+            return View(model);
+        }
+
+        public IActionResult RecoverPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Email);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email not registered");
+                    return View(model);
+                }
+
+                var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+
+                var link = Url.Action
+                    (
+                        "ResetPassword",
+                        "Account",
+                        new { token = myToken },
+                        protocol: HttpContext.Request.Scheme
+                    );
+
+                Response response = _mailHelper.SendEmail
+                    (
+                        model.Email,
+                        "Password Reset",
+                        "<h3>SchoolWeb Password Reset</h3>" +
+                        $"<p>Dear {user.FullName}, to reset your password click <a href = \"{link}\">here</a>.</p>" +
+                        "<p>Thank you.</p>"
+                    );
+
+                if (response.IsSuccess)
+                {
+                    ViewBag.Message = "<span class=\"text-success\">Access your email account and follow the link to reset your password</span>";
+                }
+
+                return View();
+            }
+
+            return View(model);
+        }
+
+        public IActionResult ResetPassword(string token)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+
+            if (user != null)
+            {
+                var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+
+                if (result.Succeeded)
+                {
+                    ViewBag.Message = "<span class=\"text-success\">Password reset successful</span>";
+                    return View();
+                }
+
+                ViewBag.Message = "Error while trying to reset password";
+                return View(model);
+            }
+
+            ViewBag.Message = "User not found";
             return View(model);
         }
 

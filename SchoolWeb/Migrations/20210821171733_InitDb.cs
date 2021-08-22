@@ -175,8 +175,8 @@ namespace SchoolWeb.Migrations
                     City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    ProfilePicture = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
-                    Picture = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    ProfilePicture = table.Column<string>(type: "nvarchar(50)", maxLength: 36, nullable: true),
+                    Picture = table.Column<string>(type: "nvarchar(50)", maxLength: 36, nullable: true),
                     PasswordChanged = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -398,6 +398,7 @@ namespace SchoolWeb.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", maxLength: 8000, nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Solved = table.Column<bool>(type: "bit", nullable: true),
                     SolvedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

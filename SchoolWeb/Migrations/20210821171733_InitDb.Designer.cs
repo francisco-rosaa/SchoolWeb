@@ -10,7 +10,7 @@ using SchoolWeb.Data;
 namespace SchoolWeb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210820152531_InitDb")]
+    [Migration("20210821171733_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -404,6 +404,9 @@ namespace SchoolWeb.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(8000)
@@ -495,7 +498,7 @@ namespace SchoolWeb.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<bool>("PasswordAltered")
+                    b.Property<bool>("PasswordChanged")
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
@@ -511,11 +514,11 @@ namespace SchoolWeb.Migrations
 
                     b.Property<string>("Picture")
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProfilePicture")
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("QualificationId")
                         .HasColumnType("int");

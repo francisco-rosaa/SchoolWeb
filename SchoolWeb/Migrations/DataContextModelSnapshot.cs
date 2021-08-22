@@ -402,6 +402,9 @@ namespace SchoolWeb.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(8000)
@@ -509,11 +512,11 @@ namespace SchoolWeb.Migrations
 
                     b.Property<string>("Picture")
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProfilePicture")
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("QualificationId")
                         .HasColumnType("int");

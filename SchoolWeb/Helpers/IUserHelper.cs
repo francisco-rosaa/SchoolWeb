@@ -29,6 +29,8 @@ namespace SchoolWeb.Helpers
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
 
+        Task<string> GetUserRoleAsync(string userId);
+
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
 
         Task<bool> IsPasswordChangedAsync(string username);
@@ -46,6 +48,12 @@ namespace SchoolWeb.Helpers
         Task<string> GeneratePasswordResetTokenAsync(User user);
 
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
+
+        Task<string> GetUserProfilePictureAsync(string userId);
+
+        Task<string> GetUserPictureAsync(string userId);
+
+        Task DeletePictureAsync(string picturePath);
 
         IEnumerable<SelectListItem> GetComboRoles();
     }
