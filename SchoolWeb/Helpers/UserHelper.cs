@@ -49,7 +49,7 @@ namespace SchoolWeb.Helpers
                     model.Username,
                     model.Password,
                     model.RememberMe,
-                    false
+                    true
                 );
         }
 
@@ -108,7 +108,7 @@ namespace SchoolWeb.Helpers
 
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
         {
-            return await _signInManager.CheckPasswordSignInAsync(user, password, false);
+            return await _signInManager.CheckPasswordSignInAsync(user, password, true);
         }
 
         public async Task<bool> IsPasswordChangedAsync(string username)

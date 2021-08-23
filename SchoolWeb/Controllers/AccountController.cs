@@ -1,11 +1,16 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using SchoolWeb.Data;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Helpers;
@@ -19,19 +24,22 @@ namespace SchoolWeb.Controllers
         private readonly IGenderRepository _genderRepository;
         private readonly IQualificationRepository _qualificationRepository;
         private readonly IMailHelper _mailHelper;
+        private readonly IConfiguration _configuration;
 
         public AccountController
             (
                 IUserHelper userHelper,
                 IGenderRepository genderRepository,
                 IQualificationRepository qualificationRepository,
-                IMailHelper mailHelper
+                IMailHelper mailHelper,
+                IConfiguration configuration
             )
         {
             _userHelper = userHelper;
             _genderRepository = genderRepository;
             _qualificationRepository = qualificationRepository;
             _mailHelper = mailHelper;
+            _configuration = configuration;
         }
 
         public IActionResult Login()
@@ -49,46 +57,41 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
+                var emailConfirmed = await _userHelper.IsEmailConfirmedAsync(model.Username);
+
+                if (!emailConfirmed)
+                {
+                    ViewBag.ErrorTitle = "Email Not Confirmed";
+                    ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
+                    return View("Error");
+                }
+
+                var passwordChanged = await _userHelper.IsPasswordChangedAsync(model.Username);
+
+                if (!passwordChanged)
+                {
+                    ViewBag.ErrorTitle = "Password Not Changed";
+                    ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
+                    return View("Error");
+                }
+
                 var result = await _userHelper.LoginAsync(model);
 
                 if (result.Succeeded)
                 {
-                    var emailConfirmed = await _userHelper.IsEmailConfirmedAsync(model.Username);
-
-                    if (emailConfirmed)
+                    if (this.Request.Query.Keys.Contains("ReturnUrl"))
                     {
-                        var passwordChanged = await _userHelper.IsPasswordChangedAsync(model.Username);
-
-                        if (passwordChanged)
-                        {
-                            if (this.Request.Query.Keys.Contains("ReturnUrl"))
-                            {
-                                return Redirect(this.Request.Query["ReturnUrl"].First());
-                            }
-
-                            return this.RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            ViewBag.ErrorTitle = "Password Not Changed";
-                            ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
-
-                            await _userHelper.LogOutAsync();
-                            return View("Error");
-                        }
+                        return Redirect(this.Request.Query["ReturnUrl"].First());
                     }
-                    else
-                    {
-                        ViewBag.ErrorTitle = "Email Not Confirmed";
-                        ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
 
-                        await _userHelper.LogOutAsync();
-                        return View("Error");
-                    }
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, result.ToString());
                 }
             }
 
-            this.ModelState.AddModelError(string.Empty, "Failed to login");
             return View(model);
         }
 
@@ -469,6 +472,29 @@ namespace SchoolWeb.Controllers
                     {
                         ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
                     }
+
+                    if (model.RemoveProfilePicture)
+                    {
+                        oldProfilePictureName = await _userHelper.GetUserProfilePictureAsync(user.Id);
+
+                        user.ProfilePicture = null;
+
+                        if (!string.IsNullOrEmpty(oldProfilePictureName))
+                        {
+                            var newResponse = await _userHelper.UpdateUserAsync(user);
+
+                            if (newResponse.Succeeded)
+                            {
+                                await _userHelper.DeletePictureAsync(oldProfilePictureName);
+
+                                message += "<br />Profile picture updated";
+                            }
+                            else
+                            {
+                                ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -479,14 +505,18 @@ namespace SchoolWeb.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             {
-                return NotFound();
+                ViewBag.ErrorTitle = "User ID or Token Missing";
+                ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
+                return View("Error");
             }
 
             var user = await _userHelper.GetUserByIdAsync(userId);
 
             if (user == null)
             {
-                return NotFound();
+                ViewBag.ErrorTitle = "User Not Found";
+                ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
+                return View("Error");
             }
 
             bool isEmailConfirmed = await _userHelper.IsEmailConfirmedAsync(user.Email);
@@ -497,9 +527,10 @@ namespace SchoolWeb.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return NotFound();
+                    ViewBag.ErrorTitle = "Email Not Confirmed";
+                    ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
+                    return View("Error");
                 }
-
             }
 
             ViewBag.MessageEmail = "Email confirmed";
@@ -543,6 +574,42 @@ namespace SchoolWeb.Controllers
                         ViewBag.Message = "Error while trying to change password";
                         ViewBag.MessageEmail = emailMessage;
                         return View(model);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User not found");
+                }
+            }
+
+            return View(model);
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                if (user != null)
+                {
+                    var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+                    if (result.Succeeded)
+                    {
+                        string message = "Password changed successfully";
+
+                        return RedirectToAction("EditProfile", "Account", new { message });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
                     }
                 }
                 else
@@ -628,6 +695,51 @@ namespace SchoolWeb.Controllers
 
             ViewBag.Message = "User not found";
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+
+                if (user != null)
+                {
+                    var result = await _userHelper.ValidatePasswordAsync(user, model.Password);
+
+                    if (result.Succeeded)
+                    {
+                        var claims = new[]
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        };
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        
+                        var token = new JwtSecurityToken
+                            (
+                                _configuration["Tokens:Issuer"],
+                                _configuration["Tokens:Audience"],
+                                claims,
+                                expires: DateTime.UtcNow.AddDays(7),
+                                signingCredentials: credentials
+                            );
+
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        };
+
+                        return Created(string.Empty, results);
+                    }
+                }
+            }
+
+            return BadRequest();
         }
 
         public IActionResult NotAuthorized()

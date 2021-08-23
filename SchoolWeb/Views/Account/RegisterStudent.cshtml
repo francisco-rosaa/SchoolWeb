@@ -7,6 +7,11 @@
 <br>
 <h3 class="text-center">Register Student</h3>
 <br>
+<div class="text-danger text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
 <br>
 <div class="row">
     <div class="col-md-12 offset-md-2">
@@ -117,12 +122,6 @@
             </div>
         </form>
     </div>
-</div>
-<br>
-<div class="text-danger text-center">
-    <p>
-        @Html.Raw(ViewBag.Message)
-    </p>
 </div>
 
 @section Scripts {

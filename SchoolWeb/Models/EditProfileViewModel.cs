@@ -76,6 +76,9 @@ namespace SchoolWeb.Models
         public string ProfilePicturePath { get; set; }
 
 
+        public bool RemoveProfilePicture { get; set; }
+
+
         public string PicturePath { get; set; }
 
 

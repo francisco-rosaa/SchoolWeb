@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,8 @@ namespace SchoolWeb
             {
                 cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
                 cfg.User.RequireUniqueEmail = true;
+                cfg.Lockout.AllowedForNewUsers = true;
+                cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DataContext>();
