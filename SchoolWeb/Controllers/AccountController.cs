@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SchoolWeb.Data;
@@ -42,6 +43,7 @@ namespace SchoolWeb.Controllers
             _configuration = configuration;
         }
 
+
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
@@ -52,33 +54,39 @@ namespace SchoolWeb.Controllers
             return View();
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var emailConfirmed = await _userHelper.IsEmailConfirmedAsync(model.Username);
-
-                if (!emailConfirmed)
-                {
-                    ViewBag.ErrorTitle = "Email Not Confirmed";
-                    ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
-                    return View("Error");
-                }
-
-                var passwordChanged = await _userHelper.IsPasswordChangedAsync(model.Username);
-
-                if (!passwordChanged)
-                {
-                    ViewBag.ErrorTitle = "Password Not Changed";
-                    ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
-                    return View("Error");
-                }
-
                 var result = await _userHelper.LoginAsync(model);
 
                 if (result.Succeeded)
                 {
+                    var emailConfirmed = await _userHelper.IsEmailConfirmedAsync(model.Username);
+
+                    if (!emailConfirmed)
+                    {
+                        ViewBag.ErrorTitle = "Email Not Confirmed";
+                        ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
+
+                        await _userHelper.LogOutAsync();
+                        return View("Error");
+                    }
+
+                    var passwordChanged = await _userHelper.IsPasswordChangedAsync(model.Username);
+
+                    if (!passwordChanged)
+                    {
+                        ViewBag.ErrorTitle = "Password Not Changed";
+                        ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
+
+                        await _userHelper.LogOutAsync();
+                        return View("Error");
+                    }
+
                     if (this.Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         return Redirect(this.Request.Query["ReturnUrl"].First());
@@ -95,12 +103,14 @@ namespace SchoolWeb.Controllers
             return View(model);
         }
 
+
         public async Task<ActionResult> Logout()
         {
             await _userHelper.LogOutAsync();
 
             return RedirectToAction("Index", "Home");
         }
+
 
         [Authorize(Roles = "Admin")]
         public IActionResult RegisterUser(string message)
@@ -120,7 +130,9 @@ namespace SchoolWeb.Controllers
             return View(model);
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterUser(RegisterUserViewModel model)
         {
@@ -177,7 +189,7 @@ namespace SchoolWeb.Controllers
 
                     if (response.IsSuccess)
                     {
-                        message += "<span class=\"text-success\">Email sent</span>";
+                        message += "<br /><span class=\"text-success\">Email sent</span>";
                         return RedirectToAction("RegisterUser", "Account", new { message });
                     }
 
@@ -197,6 +209,7 @@ namespace SchoolWeb.Controllers
             return View(model);
         }
 
+
         [Authorize(Roles = "Staff")]
         public IActionResult RegisterStudent(string message)
         {
@@ -213,6 +226,7 @@ namespace SchoolWeb.Controllers
 
             return View(model);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Staff")]
@@ -298,6 +312,7 @@ namespace SchoolWeb.Controllers
             return View(model);
         }
 
+
         private async Task SaveUploadedPicture(IFormFile picture, string pictureName)
         {
             var path = Path.Combine
@@ -313,6 +328,7 @@ namespace SchoolWeb.Controllers
             }
         }
 
+
         private async Task AddUserToRoleAsync(User user, string role)
         {
             await _userHelper.AddUserToRoleAsync(user, role);
@@ -324,6 +340,7 @@ namespace SchoolWeb.Controllers
                 await _userHelper.AddUserToRoleAsync(user, role);
             }
         }
+
 
         private async Task<Response> SendRegistrationEmailAsync(User user, string email, string fullName)
         {
@@ -350,7 +367,27 @@ namespace SchoolWeb.Controllers
             return response;
         }
 
-        public async Task<IActionResult> EditProfile(string message)
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditUsers()
+        {
+            var users = await _userHelper.GetUsersListAsync();
+
+            return View(users);
+        }
+
+
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> EditStudents()
+        {
+            var students = await _userHelper.GetStudentsListAsync();
+
+            return View(students);
+        }
+
+
+        [Authorize]
+        public async Task<IActionResult> EditProfile(string message, string Id)
         {
             if (!string.IsNullOrEmpty(message))
             {
@@ -358,6 +395,11 @@ namespace SchoolWeb.Controllers
             }
 
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+            if (!string.IsNullOrEmpty(Id))
+            {
+                user = await _userHelper.GetUserByIdAsync(Id);
+            }
 
             var model = new EditProfileViewModel
             {
@@ -368,6 +410,7 @@ namespace SchoolWeb.Controllers
 
             if (user != null)
             {
+                model.UserId = user.Id;
                 model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
                 model.GenderId = user.GenderId;
@@ -381,21 +424,27 @@ namespace SchoolWeb.Controllers
                 model.PicturePath = user.PicturePath;
                 model.Email = user.Email;
 
-                TempData["SessionUserProfilePicture"] = user.ProfilePicturePath;
-                TempData["SessionUserFirstName"] = user.FirstName;
+                if (string.IsNullOrEmpty(Id) || user.UserName == this.User.Identity.Name)
+                {
+                    TempData["SessionUserProfilePicture"] = user.ProfilePicturePath;
+                    TempData["SessionUserFirstName"] = user.FirstName;
+                }
             }
 
             return View(model);
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> EditProfile(EditProfileViewModel model)
         {
             string message = string.Empty;
 
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                var user = await _userHelper.GetUserByIdAsync(model.UserId);
 
                 if (user != null)
                 {
@@ -410,7 +459,7 @@ namespace SchoolWeb.Controllers
 
                         await SaveUploadedPicture(model.ProfilePictureFile, profilePictureName);
 
-                        oldProfilePictureName = await _userHelper.GetUserProfilePictureAsync(user.Id);
+                        oldProfilePictureName = user.ProfilePicture;
                     }
 
                     if (model.PictureFile != null && model.PictureFile.Length > 0)
@@ -419,7 +468,7 @@ namespace SchoolWeb.Controllers
 
                         await SaveUploadedPicture(model.PictureFile, pictureName);
 
-                        oldPictureName = await _userHelper.GetUserPictureAsync(user.Id);
+                        oldPictureName = user.Picture;
                     }
 
                     user.FirstName = model.FirstName;
@@ -501,6 +550,72 @@ namespace SchoolWeb.Controllers
             return RedirectToAction("EditProfile", "Account", new { message });
         }
 
+
+        [Authorize(Roles = "Admin, Staff")]
+        public async Task<IActionResult> DeleteProfile(string Id)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                ViewBag.ErrorTitle = "User Not Defined";
+                ViewBag.ErrorMessage = "Error trying to delete user";
+                return View("Error");
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(Id);
+
+            if (user == null)
+            {
+                ViewBag.ErrorTitle = "User Not Found";
+                ViewBag.ErrorMessage = "Error trying to delete user";
+                return View("Error");
+            }
+
+            if (user.UserName == this.User.Identity.Name)
+            {
+                ViewBag.ErrorTitle = "Current User";
+                ViewBag.ErrorMessage = "You cannot delete yourself";
+                return View("Error");
+            }
+
+            try
+            {
+                await _userHelper.DeleteUserAsync(user);
+
+                if (!string.IsNullOrEmpty(user.ProfilePicture))
+                {
+                    await _userHelper.DeletePictureAsync(user.ProfilePicture);
+                }
+
+                if (!string.IsNullOrEmpty(user.Picture))
+                {
+                    await _userHelper.DeletePictureAsync(user.Picture);
+                }
+
+                if (this.User.IsInRole("Admin"))
+                {
+                    return RedirectToAction(nameof(EditUsers));
+                }
+
+                if (this.User.IsInRole("Staff"))
+                {
+                    return RedirectToAction(nameof(EditStudents));
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
+                {
+                    ViewBag.ErrorTitle = $"{user.FullName} In Use";
+                    ViewBag.ErrorMessage = $"{user.FullName} cannot be deleted because it is in use by one or more records";
+                }
+
+                return View("Error");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
         public async Task<IActionResult> ActivateAccount(string userId, string token)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
@@ -527,7 +642,7 @@ namespace SchoolWeb.Controllers
 
                 if (!result.Succeeded)
                 {
-                    ViewBag.ErrorTitle = "Email Not Confirmed";
+                    ViewBag.ErrorTitle = "Failed Email Confirmation";
                     ViewBag.ErrorMessage = "Access your email account and follow the link to activate your account";
                     return View("Error");
                 }
@@ -537,7 +652,9 @@ namespace SchoolWeb.Controllers
             return View();
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ActivateAccount(ActivateAccountViewModel model)
         {
             if (ModelState.IsValid)
@@ -585,12 +702,17 @@ namespace SchoolWeb.Controllers
             return View(model);
         }
 
+
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
@@ -621,12 +743,15 @@ namespace SchoolWeb.Controllers
             return View(model);
         }
 
+
         public IActionResult RecoverPassword()
         {
             return View();
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
         {
             if (ModelState.IsValid)
@@ -669,12 +794,15 @@ namespace SchoolWeb.Controllers
             return View(model);
         }
 
+
         public IActionResult ResetPassword(string token)
         {
             return View();
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             var user = await _userHelper.GetUserByEmailAsync(model.UserName);
@@ -696,6 +824,7 @@ namespace SchoolWeb.Controllers
             ViewBag.Message = "User not found";
             return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
@@ -741,6 +870,7 @@ namespace SchoolWeb.Controllers
 
             return BadRequest();
         }
+
 
         public IActionResult NotAuthorized()
         {

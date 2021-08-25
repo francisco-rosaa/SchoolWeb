@@ -5,6 +5,18 @@
     {
       "library": "bootstrap-datepicker@1.9.0",
       "destination": "wwwroot/lib/bootstrap-datepicker/"
+    },
+    {
+      "library": "datatables.net-bs4@1.10.25",
+      "destination": "wwwroot/lib/datatables.net-bs4/"
+    },
+    {
+      "library": "datatables.net@1.10.25",
+      "destination": "wwwroot/lib/datatables.net/"
+    },
+    {
+      "library": "font-awesome@5.15.4",
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }

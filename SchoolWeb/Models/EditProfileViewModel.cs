@@ -9,6 +9,10 @@ namespace SchoolWeb.Models
     public class EditProfileViewModel
     {
 
+        [Required]
+        public string UserId { get; set; }
+
+
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "{0} is required")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "{0} must be {2} characters minimum and {1} characters maximum")]

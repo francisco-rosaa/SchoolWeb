@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,13 +14,13 @@ namespace SchoolWeb.Helpers
 
         Task<User> GetUserByEmailAsync(string email);
 
+        Task<User> GetUserByIdAsync(string userId);
+
         Task<SignInResult> LoginAsync(LoginViewModel model);
 
         Task LogOutAsync();
 
         Task<IdentityResult> UpdateUserAsync(User user);
-
-        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
         Task CheckRoleAsync(string roleName);
 
@@ -30,6 +31,8 @@ namespace SchoolWeb.Helpers
         Task<bool> IsUserInRoleAsync(User user, string roleName);
 
         Task<string> GetUserRoleAsync(string userId);
+
+        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
 
@@ -43,8 +46,6 @@ namespace SchoolWeb.Helpers
 
         Task<bool> IsEmailConfirmedAsync(string username);
 
-        Task<User> GetUserByIdAsync(string userId);
-
         Task<string> GeneratePasswordResetTokenAsync(User user);
 
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
@@ -56,5 +57,11 @@ namespace SchoolWeb.Helpers
         Task DeletePictureAsync(string picturePath);
 
         IEnumerable<SelectListItem> GetComboRoles();
+
+        Task<IEnumerable<EditUsersViewModel>> GetUsersListAsync();
+
+        Task<IEnumerable<EditUsersViewModel>> GetStudentsListAsync();
+
+        Task DeleteUserAsync(User user);
     }
 }

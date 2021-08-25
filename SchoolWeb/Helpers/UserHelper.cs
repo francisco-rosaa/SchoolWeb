@@ -42,6 +42,11 @@ namespace SchoolWeb.Helpers
             return await _userManager.FindByEmailAsync(email);
         }
 
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
+
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
             return await _signInManager.PasswordSignInAsync
@@ -61,11 +66,6 @@ namespace SchoolWeb.Helpers
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await _userManager.UpdateAsync(user);
-        }
-
-        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
-        {
-            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
         public async Task CheckRoleAsync(string roleName)
@@ -104,6 +104,11 @@ namespace SchoolWeb.Helpers
                 .FirstOrDefaultAsync();
 
             return await GetRoleByIdAsync(roleId.Result.ToString());
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
@@ -149,11 +154,6 @@ namespace SchoolWeb.Helpers
             }
 
             return passChanged;
-        }
-
-        public async Task<User> GetUserByIdAsync(string userId)
-        {
-            return await _userManager.FindByIdAsync(userId);
         }
 
         public async Task<string> GeneratePasswordResetTokenAsync(User user)
@@ -224,6 +224,85 @@ namespace SchoolWeb.Helpers
             });
 
             return list;
+        }
+
+        public async Task<IEnumerable<EditUsersViewModel>> GetUsersListAsync()
+        {
+            IEnumerable<EditUsersViewModel> users = null;
+
+            await Task.Run(() =>
+            {
+                users = (
+                from user in _context.Users
+                join userRole in _context.UserRoles
+                on user.Id equals userRole.UserId
+                join role in _context.Roles
+                on userRole.RoleId equals role.Id
+                where role.Name != "Student"
+                orderby user.FirstName
+                select new
+                {
+                    Id = user.Id,
+                    ProfilePicture = user.ProfilePicturePath,
+                    FullName = user.FullName,
+                    City = user.City,
+                    Email = user.Email,
+                    Role = role.Name,
+                }
+                ).ToList().Select(x => new EditUsersViewModel()
+                {
+                    Id = x.Id,
+                    ProfilePicture = x.ProfilePicture,
+                    FullName = x.FullName,
+                    City = x.City,
+                    Email = x.Email,
+                    Role = x.Role
+                });
+            });
+
+            return users;
+        }
+
+        public async Task<IEnumerable<EditUsersViewModel>> GetStudentsListAsync()
+        {
+            IEnumerable<EditUsersViewModel> users = null;
+
+            await Task.Run(() =>
+            {
+                users = (
+                from user in _context.Users
+                join userRole in _context.UserRoles
+                on user.Id equals userRole.UserId
+                join role in _context.Roles
+                on userRole.RoleId equals role.Id
+                where role.Name == "Student"
+                orderby user.FirstName
+                select new
+                {
+                    Id = user.Id,
+                    ProfilePicture = user.ProfilePicturePath,
+                    FullName = user.FullName,
+                    City = user.City,
+                    Email = user.Email,
+                    Role = role.Name,
+                }
+                ).ToList().Select(x => new EditUsersViewModel()
+                {
+                    Id = x.Id,
+                    ProfilePicture = x.ProfilePicture,
+                    FullName = x.FullName,
+                    City = x.City,
+                    Email = x.Email,
+                    Role = x.Role
+                });
+            });
+
+            return users;
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {
+            await _userManager.DeleteAsync(user);
         }
     }
 }
