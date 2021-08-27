@@ -25,11 +25,14 @@ namespace SchoolWeb.Migrations
                 name: "Configurations",
                 columns: table => new
                 {
-                    ClassMaxStudents = table.Column<int>(type: "int", nullable: true),
-                    MaxPercentageAbsence = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClassMaxStudents = table.Column<int>(type: "int", nullable: false),
+                    MaxPercentageAbsence = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Configurations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(

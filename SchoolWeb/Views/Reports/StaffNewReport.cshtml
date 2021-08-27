@@ -13,20 +13,10 @@
             <input type="hidden" asp-for="UserId" />
             <div class="container">
                 <div class="row">
-                    <div class="form-group col-md-5">
+                    <div class="form-group col-md-8">
                         <label asp-for="Title">Title</label>
-                        <input asp-for="Title" class="form-control" />
+                        <input asp-for="Title" class="form-control bg-light" />
                         <span asp-validation-for="Title" class="text-danger small"></span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label asp-for="Date" class="control-label"></label>
-                        <div class="input-group date" data-provide="datepicker">
-                            <input type="text" asp-for="Date" class="form-control">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                            </div>
-                        </div>
-                        <span asp-validation-for="Date" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row">
@@ -58,15 +48,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    <script type="text/javascript">
-        if (document.getElementById("Date").value === "01/01/0001 00:00:00") {
-            document.getElementById("Date").value = "";
-        }
-        $('.date').datepicker({
-            format: 'dd/mm/yyyy',
-            orientation: "bottom",
-            autoclose: true
-        });
-    </script>
 }

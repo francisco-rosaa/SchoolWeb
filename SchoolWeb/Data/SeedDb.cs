@@ -14,6 +14,7 @@ namespace SchoolWeb.Data
         private readonly IUserHelper _userHelper;
         private readonly IGenderRepository _genderRepository;
         private readonly IQualificationRepository _qualificationRepository;
+        private readonly IConfigurationRepository _configurationRepository;
         private readonly IReportRepository _reportRepository;
 
         public SeedDb
@@ -22,6 +23,7 @@ namespace SchoolWeb.Data
                 IUserHelper userHelper,
                 IGenderRepository genderRepository,
                 IQualificationRepository qualificationRepository,
+                IConfigurationRepository configurationRepository,
                 IReportRepository reportRepository
             )
         {
@@ -29,6 +31,7 @@ namespace SchoolWeb.Data
             _userHelper = userHelper;
             _genderRepository = genderRepository;
             _qualificationRepository = qualificationRepository;
+            _configurationRepository = configurationRepository;
             _reportRepository = reportRepository;
         }
 
@@ -39,6 +42,7 @@ namespace SchoolWeb.Data
             await AddRolesAsync();
             await AddGendersAsync();
             await AddQualificationsAsync();
+            await AddConfigurations();
             await AddUserAdminAsync();
             await AddUserStaffAsync();
             await AddUserStudent1Async();
@@ -71,6 +75,23 @@ namespace SchoolWeb.Data
             await _qualificationRepository.AddQualificationAsync("Level 6");
             await _qualificationRepository.AddQualificationAsync("Level 7");
             await _qualificationRepository.AddQualificationAsync("Level 8");
+        }
+
+        private async Task AddConfigurations()
+        {
+            var configurations = await _context.Configurations.FirstOrDefaultAsync();
+
+            if (configurations == null)
+            {
+                var configuration = new Configuration
+                {
+                    ClassMaxStudents = 30,
+                    MaxPercentageAbsence = 5
+                };
+
+                await _context.Configurations.AddAsync(configuration);
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task AddUserAdminAsync()

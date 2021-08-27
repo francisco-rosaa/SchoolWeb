@@ -38,6 +38,11 @@ namespace SchoolWeb.Data.Entities
                 });
         }
 
+        public async Task<Report> GetReportByIdAsync(int Id)
+        {
+            return await _context.Reports.Where(x => x.Id == Id).FirstOrDefaultAsync();
+        }
+
         public async Task<ReportsViewModel> GetReportByIdWithUserAsync(int Id)
         {
             var report = await _context.Reports
@@ -80,6 +85,13 @@ namespace SchoolWeb.Data.Entities
                     Solved = x.Solved,
                     SolvedDate = x.SolvedDate
                 });
+        }
+
+        public async Task<int> SaveReportAsync(Report report)
+        {
+            await _context.Reports.AddAsync(report);
+
+            return await _context.SaveChangesAsync();
         }
     }
 }

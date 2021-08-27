@@ -10,7 +10,7 @@ using SchoolWeb.Data;
 namespace SchoolWeb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210825234044_InitDb")]
+    [Migration("20210827174753_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -243,11 +243,18 @@ namespace SchoolWeb.Migrations
 
             modelBuilder.Entity("SchoolWeb.Data.Entities.Configuration", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int>("ClassMaxStudents")
                         .HasColumnType("int");
 
                     b.Property<int>("MaxPercentageAbsence")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Configurations");
                 });

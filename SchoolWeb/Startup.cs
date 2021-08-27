@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SchoolWeb.Data;
+using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Helpers;
 
@@ -58,6 +59,8 @@ namespace SchoolWeb
             services.AddScoped<IGenderRepository, GenderRepository>();
             services.AddScoped<IQualificationRepository, QualificationRepository>();
             services.AddScoped<IReportRepository, ReportRepository>();
+            services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
+            services.AddScoped<ICoursesRepository, CoursesRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {

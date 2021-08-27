@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SchoolWeb.Data;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Helpers;
 using SchoolWeb.Models;
@@ -15,18 +13,11 @@ namespace SchoolWeb.Controllers
     {
         private readonly IReportRepository _reportRepository;
         private readonly IUserHelper _userHelper;
-        private readonly DataContext _context;
 
-        public ReportsController
-            (
-            IReportRepository reportRepository,
-            IUserHelper userHelper,
-            DataContext context
-            )
+        public ReportsController(IReportRepository reportRepository, IUserHelper userHelper)
         {
             _reportRepository = reportRepository;
             _userHelper = userHelper;
-            _context = context;
         }
 
 
@@ -88,7 +79,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var report = await _context.Reports.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
+                var report = await _reportRepository.GetReportByIdAsync(model.Id);
 
                 if (report == null)
                 {
@@ -110,12 +101,18 @@ namespace SchoolWeb.Controllers
                 report.Solved = true;
                 report.SolvedDate = DateTime.Today;
 
-                var result = await _context.SaveChangesAsync();
-
-                if (result > 0)
+                try
                 {
+                    await _reportRepository.UpdateAsync(report);
+
                     string message = "Report updated successfully";
                     return RedirectToAction("AdminIndexReports", "Reports", new { message });
+                }
+                catch
+                {
+                    ViewBag.ErrorTitle = "Report Not Updated";
+                    ViewBag.ErrorMessage = "There was an error";
+                    return View("Error");
                 }
             }
 
@@ -215,13 +212,11 @@ namespace SchoolWeb.Controllers
                     User = user,
                     Title = model.Title,
                     Message = model.Message,
-                    Date = model.Date,
+                    Date = DateTime.Today,
                     Solved = false
                 };
 
-                await _context.Reports.AddAsync(report);
-
-                var result = await _context.SaveChangesAsync();
+                var result = await _reportRepository.SaveReportAsync(report);
 
                 if (result > 0)
                 {

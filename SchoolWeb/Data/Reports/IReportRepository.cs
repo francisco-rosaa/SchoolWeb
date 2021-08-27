@@ -10,8 +10,12 @@ namespace SchoolWeb.Data.Entities
 
         IQueryable<ReportsViewModel> GetAllReportsWithUsers();
 
+        Task<Report> GetReportByIdAsync(int Id);
+
         Task<ReportsViewModel> GetReportByIdWithUserAsync(int Id);
 
         IQueryable<ReportsViewModel> GetAllReportsByUserAsync(string userId);
+
+        Task<int> SaveReportAsync(Report report);
     }
 }
