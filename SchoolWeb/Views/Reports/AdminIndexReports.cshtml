@@ -1,0 +1,122 @@
+﻿@model IEnumerable<SchoolWeb.Models.ReportsViewModel>
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<br>
+<br>
+<h3 class="text-center">Reports</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <table class="table table-hover table-responsive table-striped" id="AdminIndexReports">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Solved)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Age)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.User.FullName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Date)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SolvedDate)
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle text-center">
+
+                                    @if (item.Solved == true)
+                                    {
+                                        <i style="font-size: 28px; color: darkgreen;" class="fa">&#xf14a;</i>
+                                    }
+                                    else
+                                    {
+                                        <i style="font-size: 26px; color: darkred;" class="fa">&#xf071;</i>
+                                    }
+
+                                </td>
+                                <td class="align-middle">
+                                    @Html.DisplayFor(modelItem => item.Age)
+                                </td>
+                                <td class="align-middle">
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td class="align-middle">
+                                    @Html.DisplayFor(modelItem => item.User.FullName)
+                                </td>
+                                <td class="align-middle">
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td class="align-middle">
+
+                                    @if (item.Solved == true)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.SolvedDate)
+                                    }
+                                    else
+                                    {
+                                        <div>Pending</div>
+                                    }
+
+                                </td>
+                                <td id="@item.Id" class="align-middle">
+                                    <a asp-action="AdminReportDetails" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<div class="text-success text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
+
+@section Scripts{
+
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#AdminIndexReports').DataTable({
+                responsive: true,
+                columnDefs: [{
+                    "targets": [0, 6],
+                    "orderable": false,
+                    "searchable": false
+                }],
+                order: [[1, 'desc']]
+            });
+        });
+    </script>
+
+}

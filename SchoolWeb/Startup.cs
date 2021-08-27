@@ -57,11 +57,12 @@ namespace SchoolWeb
 
             services.AddScoped<IGenderRepository, GenderRepository>();
             services.AddScoped<IQualificationRepository, QualificationRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Account/NotAuthorized";
-                options.AccessDeniedPath = "/Account/NotAuthorized";
+                options.LoginPath = "/Accounts/NotAuthorized";
+                options.AccessDeniedPath = "/Accounts/NotAuthorized";
             });
 
             services.AddControllersWithViews();

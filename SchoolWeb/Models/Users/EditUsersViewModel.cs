@@ -9,7 +9,7 @@ namespace SchoolWeb.Models
         [Display(Name = "Picture")]
         public string ProfilePicture { get; set; }
 
-        [Display(Name = "Full Name")]
+        [Display(Name = "Name")]
         public string FullName { get; set; }
 
         public string City { get; set; }

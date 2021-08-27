@@ -9,7 +9,10 @@ namespace SchoolWeb.Data.Entities
         public int Id { get; set; }
 
 
+        [Display(Name = "User ID")]
         [Required(ErrorMessage = "{0} is required")]
+        public string UserId { get; set; }
+
         public User User { get; set; }
 
 

@@ -57,7 +57,7 @@
                                     @Html.DisplayFor(modelItem => item.Role)
                                 </td>
                                 <td id="@item.Id" class="align-middle">
-                                    <a asp-action="EditProfile" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                                    <a asp-action="EditUserProfile" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
                                     &nbsp
                                     <a asp-action="DeleteProfile" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
                                 </td>
@@ -126,7 +126,7 @@
                 return false;
             });
             $("#btnYesDelete").click(function () {
-                window.location.href = "/Account/DeleteProfile/" + id;
+                window.location.href = "/Users/DeleteProfile/" + id;
             });
         });
     </script>

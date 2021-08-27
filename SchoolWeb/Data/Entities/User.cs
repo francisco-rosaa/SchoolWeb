@@ -86,7 +86,7 @@ namespace SchoolWeb.Data.Entities
         public bool PasswordChanged { get; set; } = false;
 
 
-        [Display(Name = "Full Name")]
+        [Display(Name = "Name")]
         public string FullName => $"{FirstName} {LastName}";
 
 

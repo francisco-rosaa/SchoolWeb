@@ -1,0 +1,96 @@
+﻿@model SchoolWeb.Models.ReportsViewModel
+@{
+    ViewData["Title"] = "Report Details";
+}
+
+<br>
+<br>
+<h3 class="text-center">Report Details</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <table class="table table-hover table-responsive table-striped" id="StaffReportDetails">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Solved)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Age)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.User.FullName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Date)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SolvedDate)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="align-middle text-center">
+
+                                @if (Model.Solved == true)
+                                {
+                                    <i style="font-size: 28px; color: darkgreen;" class="fa">&#xf14a;</i>
+                                }
+                                else
+                                {
+                                    <i style="font-size: 26px; color: darkred;" class="fa">&#xf071;</i>
+                                }
+
+                            </td>
+                            <td class="align-middle">
+                                @Model.Age
+                            </td>
+                            <td class="align-middle">
+                                @Model.Title
+                            </td>
+                            <td class="align-middle">
+                                @Model.User.FullName
+                            </td>
+                            <td class="align-middle">
+                                @Model.Date.ToString("dd/MM/yyyy")
+                            </td>
+                            <td class="align-middle">
+
+                                @if (Model.Solved == true)
+                                {
+                                    @Model.SolvedDate.ToString().Split(" ")[0]
+
+                                }
+                                else
+                                {
+                                    <div>Pending</div>
+                                }
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input asp-for="Title" class="form-control font-weight-bold bg-secondary" style="height: 3rem; color: white;" disabled="disabled" />
+                        <textarea asp-for="Message" class="form-control" rows="3" disabled="disabled"></textarea>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a asp-action="StaffIndexReports" class="btn btn-secondary">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

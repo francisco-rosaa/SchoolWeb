@@ -263,41 +263,45 @@ namespace SchoolWeb.Helpers
             return users;
         }
 
-        public async Task<IEnumerable<EditUsersViewModel>> GetStudentsListAsync()
+        public async Task<IEnumerable<EditStudentsViewModel>> GetStudentsListAsync()
         {
-            IEnumerable<EditUsersViewModel> users = null;
+            IEnumerable<EditStudentsViewModel> students = null;
 
             await Task.Run(() =>
             {
-                users = (
+                students = (
                 from user in _context.Users
                 join userRole in _context.UserRoles
                 on user.Id equals userRole.UserId
                 join role in _context.Roles
                 on userRole.RoleId equals role.Id
                 where role.Name == "Student"
+                join qualification in _context.Qualifications
+                on user.QualificationId equals qualification.Id
                 orderby user.FirstName
                 select new
                 {
                     Id = user.Id,
                     ProfilePicture = user.ProfilePicturePath,
                     FullName = user.FullName,
+                    BirthDate = user.BirthDate,
+                    Qualification = qualification.Name,
                     City = user.City,
-                    Email = user.Email,
-                    Role = role.Name,
+                    Email = user.Email
                 }
-                ).ToList().Select(x => new EditUsersViewModel()
+                ).ToList().Select(x => new EditStudentsViewModel()
                 {
                     Id = x.Id,
                     ProfilePicture = x.ProfilePicture,
                     FullName = x.FullName,
+                    BirthDate = x.BirthDate,
+                    Qualification = x.Qualification,
                     City = x.City,
-                    Email = x.Email,
-                    Role = x.Role
+                    Email = x.Email
                 });
             });
 
-            return users;
+            return students;
         }
 
         public async Task DeleteUserAsync(User user)

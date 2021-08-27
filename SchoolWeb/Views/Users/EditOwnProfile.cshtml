@@ -19,7 +19,7 @@
             <input type="hidden" asp-for="UserId" />
             <div class="container">
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <div class="container">
                             <div class="row justify-content-center">
                                 <img src="@Url.Content(Model.ProfilePicturePath)" alt="Image" class="rounded-circle embed-responsive" style="width: 160px; height: 160px; max-height: 100%; width: auto;" />
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-md-4 span6 align-self-center">
+                    <div class="form-group col-md-4 align-self-center">
                         <h4 class="font-weight-normal">@Model.FirstName @Model.LastName</h4>
                         <h6 class="font-weight-light">@Model.Email</h6>
                         <h6 class="font-weight-light text-uppercase">@Model.Role</h6>
@@ -49,36 +49,36 @@
             <br>
             <div class="container">
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="FirstName">First Name</label>
                         <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="LastName">Last Name</label>
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="GenderId" class="control-label"></label>
                         <select asp-for="GenderId" asp-items="Model.Genders" class="form-control"></select>
                         <span asp-validation-for="GenderId" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="QualificationId" class="control-label"></label>
                         <select asp-for="QualificationId" asp-items="Model.Qualifications" class="form-control"></select>
                         <span asp-validation-for="QualificationId" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="CcNumber">CC Number</label>
                         <input asp-for="CcNumber" class="form-control" />
                         <span asp-validation-for="CcNumber" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="BirthDate" class="control-label"></label>
                         <div class="input-group date" data-provide="datepicker">
                             <input type="text" asp-for="BirthDate" class="form-control">
@@ -90,19 +90,19 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="Address">Address</label>
                         <input asp-for="Address" class="form-control" />
                         <span asp-validation-for="Address" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="City">City</label>
                         <input asp-for="City" class="form-control" />
                         <span asp-validation-for="City" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="PhoneNumber">Phone Number</label>
                         <input asp-for="PhoneNumber" class="form-control" />
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
@@ -110,7 +110,7 @@
 
                     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Student"))
                     {
-                        <div class="form-group col-md-4 span6">
+                        <div class="form-group col-md-4">
                             <label asp-for="PictureFile" class="control-label"></label>
                             <input asp-for="PictureFile" class="form-control" type="file" accept="image/*" />
                             <span asp-validation-for="PictureFile" class="text-danger small"></span>
@@ -140,7 +140,7 @@
                             <input type="submit" value="Update" class="btn btn-secondary" />
                         </div>
                         <div class="col-md-8 offset-md-2 nav-item text-center">
-                            <a asp-action="ChangePassword" class="nav-link text-dark">Change Password</a>
+                            <a asp-controller="Accounts" asp-action="ChangePassword" class="nav-link text-dark">Change Password</a>
                         </div>
                         <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
                     </div>

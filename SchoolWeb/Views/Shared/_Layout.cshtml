@@ -13,7 +13,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3 py-4" style="background-color: #0D98BA; ">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SchoolWeb</a>
+                <a class="navbar-brand text-nowrap" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i style="font-size:30px" class="fa">Schoo&#xf19d;Web</i>
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -30,9 +32,12 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Users</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="RegisterUser">Register</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="EditUsers">Edit</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="RegisterUser">Register</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="EditUsers">Edit</a></li>
                                 </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Reports" asp-action="AdminIndexReports">Reports</a>
                             </li>
                         }
 
@@ -41,36 +46,46 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Students</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="RegisterStudent">Register</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="EditStudent">Edit</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="RegisterStudent">Register</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="EditStudents">Edit</a></li>
                                 </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Reports" asp-action="StaffIndexReports">Reports</a>
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
+                        {
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        }
+
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
                         @if (this.User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a asp-controller="Account" asp-action="EditProfile">
+                                <a asp-controller="Users" asp-action="EditOwnProfile">
                                     <img src="@Url.Content(TempData.Peek("SessionUserProfilePicture").ToString())" alt="Image" class="rounded-circle" style="vertical-align: middle; width: 44px; height: 44px;  max-height: 100%; width: auto;" />
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-warning" asp-area="" asp-controller="Account" asp-action="EditProfile">@TempData.Peek("SessionUserFirstName").ToString()</a>
+                                <a class="nav-link text-warning" asp-area="" asp-controller="Users" asp-action="EditOwnProfile">@TempData.Peek("SessionUserFirstName").ToString()</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Accounts" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Accounts" asp-action="Login">Login</a>
                             </li>
                         }
                     </ul>
@@ -87,7 +102,7 @@
 
     <footer class="border-top footer text-muted small">
         <div class="container">
-            SchoolWeb &nbsp&nbsp|&nbsp&nbsp &copy; 2021 frΔnk
+            <i style="font-size:16px" class="fa">Schoo&#xf19d;Web</i> &nbsp&nbsp|&nbsp&nbsp &copy; 2021 frΔnk
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

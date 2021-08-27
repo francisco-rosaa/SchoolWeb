@@ -1,13 +1,13 @@
-﻿@model SchoolWeb.Models.RegisterUserViewModel
+﻿@model SchoolWeb.Models.EditProfileViewModel
 @{
-    ViewData["Title"] = "Register User";
+    ViewData["Title"] = "Edit Profile";
 }
 
 <br>
 <br>
-<h3 class="text-center">Register User</h3>
+<h3 class="text-center">Edit Profile</h3>
 <br>
-<div class="text-danger text-center">
+<div class="text-success text-center">
     <p>
         @Html.Raw(ViewBag.Message)
     </p>
@@ -16,50 +16,69 @@
 <div class="row">
     <div class="col-md-12 offset-md-2">
         <form method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="UserId" />
             <div class="container">
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
-                        <label asp-for="RoleId" class="control-label"></label>
-                        <select asp-for="RoleId" asp-items="Model.Roles" class="form-control"></select>
-                        <span asp-validation-for="RoleId" class="text-danger small"></span>
+                    <div class="form-group col-md-4">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <img src="@Url.Content(Model.ProfilePicturePath)" alt="Image" class="rounded-circle embed-responsive" style="width: 160px; height: 160px; max-height: 100%; width: auto;" />
+                            </div>
+                            <br>
+                            <div class="row justify-content-center">
+                                <div class="form-group align-self-baseline">
+                                    <input asp-for="ProfilePictureFile" class="form-control" type="file" accept="image/*" style="color: transparent; width: 6.4rem;" />
+                                    <span asp-validation-for="ProfilePictureFile" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="form-check align-self-baseline">
+                                    <input asp-for="RemoveProfilePicture" type="checkbox" class="form-check-input" />
+                                    <label asp-for="RemoveProfilePicture" class="form-check-label">Remove</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-4 span6">
-                        <label asp-for="ProfilePictureFile" class="control-label"></label>
-                        <input asp-for="ProfilePictureFile" class="form-control" type="file" accept="image/*" />
-                        <span asp-validation-for="ProfilePictureFile" class="text-danger small"></span>
+                    <div class="form-group col-md-4 align-self-center">
+                        <h4 class="font-weight-normal">@Model.FirstName @Model.LastName</h4>
+                        <h6 class="font-weight-light">@Model.Email</h6>
+                        <h6 class="font-weight-light text-uppercase">@Model.Role</h6>
                     </div>
                 </div>
+            </div>
+            <br>
+            <div class="container">
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="FirstName">First Name</label>
                         <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="LastName">Last Name</label>
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="GenderId" class="control-label"></label>
                         <select asp-for="GenderId" asp-items="Model.Genders" class="form-control"></select>
                         <span asp-validation-for="GenderId" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="QualificationId" class="control-label"></label>
                         <select asp-for="QualificationId" asp-items="Model.Qualifications" class="form-control"></select>
                         <span asp-validation-for="QualificationId" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="CcNumber">CC Number</label>
                         <input asp-for="CcNumber" class="form-control" />
                         <span asp-validation-for="CcNumber" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="BirthDate" class="control-label"></label>
                         <div class="input-group date" data-provide="datepicker">
                             <input type="text" asp-for="BirthDate" class="form-control">
@@ -71,48 +90,54 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="Address">Address</label>
                         <input asp-for="Address" class="form-control" />
                         <span asp-validation-for="Address" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="City">City</label>
                         <input asp-for="City" class="form-control" />
                         <span asp-validation-for="City" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-md-4 span6">
+                    <div class="form-group col-md-4">
                         <label asp-for="PhoneNumber">Phone Number</label>
                         <input asp-for="PhoneNumber" class="form-control" />
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                     </div>
-                    <div class="form-group col-md-4 span6">
-                        <label asp-for="Email">Email</label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger small"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-4 span6">
-                        <label asp-for="Password">Password</label>
-                        <input asp-for="Password" type="password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger small"></span>
-                    </div>
-                    <div class="form-group col-md-4 span6">
-                        <label asp-for="Confirm">Confirm</label>
-                        <input asp-for="Confirm" type="password" class="form-control" />
-                        <span asp-validation-for="Confirm" class="text-danger small"></span>
-                    </div>
+
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
+                    {
+                        <div class="form-group col-md-4">
+                            <label asp-for="PictureFile" class="control-label"></label>
+                            <input asp-for="PictureFile" class="form-control" type="file" accept="image/*" />
+                            <span asp-validation-for="PictureFile" class="text-danger small"></span>
+                        </div>
+                    }
+
                 </div>
             </div>
             <br>
+
+            @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
+            {
+                <div class="form-group col-md-8">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <img src="@Url.Content(Model.PicturePath)" alt="Image" class="rounded embed-responsive" style="width: 250px; height: 250px; max-height: 100%; width: auto;" />
+                        </div>
+                    </div>
+                </div>
+                <br>
+            }
+
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 offset-md-2">
                         <div class="form-group text-center">
-                            <input type="submit" value="Register User" class="btn btn-secondary" />
+                            <input type="submit" value="Update" class="btn btn-secondary" />
                         </div>
                         <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
                     </div>
@@ -126,13 +151,12 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script type="text/javascript">
-        if (document.getElementById("BirthDate").value === "01/01/0001 00:00:00") {
-            document.getElementById("BirthDate").value = "";
-        }
         $('.date').datepicker({
             format: 'dd/mm/yyyy',
             orientation: "bottom",
             autoclose: true
         });
+        let date = document.getElementById("BirthDate").value;
+        document.getElementById("BirthDate").value = date.split(' ')[0];
     </script>
 }

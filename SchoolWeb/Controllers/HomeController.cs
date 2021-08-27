@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SchoolWeb.Helpers;
-using System.Threading.Tasks;
 
 namespace SchoolWeb.Controllers
 {
@@ -12,6 +12,7 @@ namespace SchoolWeb.Controllers
         {
             _userHelper = userHelper;
         }
+
 
         public async Task<IActionResult> Index()
         {
@@ -28,6 +29,7 @@ namespace SchoolWeb.Controllers
 
             return View();
         }
+
 
         public IActionResult Privacy()
         {

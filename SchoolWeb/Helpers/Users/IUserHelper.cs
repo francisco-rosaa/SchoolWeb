@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SchoolWeb.Helpers
 {
@@ -60,7 +59,7 @@ namespace SchoolWeb.Helpers
 
         Task<IEnumerable<EditUsersViewModel>> GetUsersListAsync();
 
-        Task<IEnumerable<EditUsersViewModel>> GetStudentsListAsync();
+        Task<IEnumerable<EditStudentsViewModel>> GetStudentsListAsync();
 
         Task DeleteUserAsync(User user);
     }

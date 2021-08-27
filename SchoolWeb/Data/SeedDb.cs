@@ -14,19 +14,22 @@ namespace SchoolWeb.Data
         private readonly IUserHelper _userHelper;
         private readonly IGenderRepository _genderRepository;
         private readonly IQualificationRepository _qualificationRepository;
+        private readonly IReportRepository _reportRepository;
 
         public SeedDb
             (
                 DataContext context,
                 IUserHelper userHelper,
                 IGenderRepository genderRepository,
-                IQualificationRepository qualificationRepository
+                IQualificationRepository qualificationRepository,
+                IReportRepository reportRepository
             )
         {
             _context = context;
             _userHelper = userHelper;
             _genderRepository = genderRepository;
             _qualificationRepository = qualificationRepository;
+            _reportRepository = reportRepository;
         }
 
         public async Task SeedAsync()
@@ -38,7 +41,9 @@ namespace SchoolWeb.Data
             await AddQualificationsAsync();
             await AddUserAdminAsync();
             await AddUserStaffAsync();
-            await AddUserStudentAsync();
+            await AddUserStudent1Async();
+            await AddUserStudent2Async();
+            await AddReportsAsync();
         }
 
         private async Task AddRolesAsync()
@@ -80,9 +85,9 @@ namespace SchoolWeb.Data
                     FirstName = "James",
                     LastName = "Dean",
                     GenderId = _context.Genders.Where(x => x.Name == "Male").FirstOrDefault().Id,
-                    QualificationId = _context.Qualifications.Where(x => x.Name == "Level 6").FirstOrDefault().Id,
+                    QualificationId = _context.Qualifications.Where(x => x.Name == "Level 7").FirstOrDefault().Id,
                     CcNumber = "1234567890",
-                    BirthDate = DateTime.Today.AddYears(-25),
+                    BirthDate = DateTime.Today.AddYears(-35),
                     Address = "Sunset Street, 7",
                     City = "Lisbon",
                     PhoneNumber = "+351210123456",
@@ -108,11 +113,11 @@ namespace SchoolWeb.Data
                     FirstName = "Karen",
                     LastName = "Gillan",
                     GenderId = _context.Genders.Where(x => x.Name == "Female").FirstOrDefault().Id,
-                    QualificationId = _context.Qualifications.Where(x => x.Name == "Level 4").FirstOrDefault().Id,
+                    QualificationId = _context.Qualifications.Where(x => x.Name == "Level 5").FirstOrDefault().Id,
                     CcNumber = "4567890123",
                     BirthDate = DateTime.Today.AddYears(-30),
                     Address = "Dark Alley, 9",
-                    City = "Lisbon",
+                    City = "Porto",
                     PhoneNumber = "+351210456789",
                     Email = "staff@gmail.com",
                     PasswordChanged = true
@@ -124,15 +129,15 @@ namespace SchoolWeb.Data
             await IsUserInRole(userStaff, "Staff");
         }
 
-        private async Task AddUserStudentAsync()
+        private async Task AddUserStudent1Async()
         {
-            var userStudent = await _userHelper.GetUserByEmailAsync("student@gmail.com");
+            var userStudent = await _userHelper.GetUserByEmailAsync("student1@gmail.com");
 
             if (userStudent == null)
             {
                 userStudent = new User
                 {
-                    UserName = "student@gmail.com",
+                    UserName = "student1@gmail.com",
                     FirstName = "Frankie",
                     LastName = "Muniz",
                     GenderId = _context.Genders.Where(x => x.Name == "Not Specified").FirstOrDefault().Id,
@@ -142,7 +147,35 @@ namespace SchoolWeb.Data
                     Address = "Sunshine Street, 1",
                     City = "Lisbon",
                     PhoneNumber = "+351210789123",
-                    Email = "student@gmail.com",
+                    Email = "student1@gmail.com",
+                    PasswordChanged = true
+                };
+
+                await AddUserWithRoleAsync(userStudent, "Student");
+            }
+
+            await IsUserInRole(userStudent, "Student");
+        }
+
+        private async Task AddUserStudent2Async()
+        {
+            var userStudent = await _userHelper.GetUserByEmailAsync("student2@gmail.com");
+
+            if (userStudent == null)
+            {
+                userStudent = new User
+                {
+                    UserName = "student2@gmail.com",
+                    FirstName = "John",
+                    LastName = "Cortez",
+                    GenderId = _context.Genders.Where(x => x.Name == "Male").FirstOrDefault().Id,
+                    QualificationId = _context.Qualifications.Where(x => x.Name == "Level 3").FirstOrDefault().Id,
+                    CcNumber = "6860123456",
+                    BirthDate = DateTime.Today.AddYears(-25),
+                    Address = "Moon Street, 8",
+                    City = "Porto",
+                    PhoneNumber = "+351658789123",
+                    Email = "student2@gmail.com",
                     PasswordChanged = true
                 };
 
@@ -174,6 +207,50 @@ namespace SchoolWeb.Data
             if (!isUserInRole)
             {
                 await _userHelper.AddUserToRoleAsync(user, role);
+            }
+        }
+
+        private async Task AddReportsAsync()
+        {
+            var userStaff = await _userHelper.GetUserByEmailAsync("staff@gmail.com");
+
+            if (userStaff != null)
+            {
+                if (await _reportRepository.IsReportsEmptyAsync())
+                {
+                    Report report1 = new Report
+                    {
+                        UserId = userStaff.Id,
+                        Title = "Add Software Engineering Discipline",
+                        Message = "Please add this discipline as soon as possible. Thank you.",
+                        Date = DateTime.Today.AddDays(-6),
+                        Solved = true,
+                        SolvedDate = DateTime.Today.AddDays(-1)
+                    };
+
+                    Report report2 = new Report
+                    {
+                        UserId = userStaff.Id,
+                        Title = "Add .NET Programming Course",
+                        Message = "Please add this course as soon as possible. Thank you.",
+                        Date = DateTime.Today.AddDays(-4),
+                        Solved = false
+                    };
+
+                    Report report3 = new Report
+                    {
+                        UserId = userStaff.Id,
+                        Title = "Bug When Adding Evaluation",
+                        Message = "When adding negative evaluations the program stops responding. Please help.",
+                        Date = DateTime.Today.AddDays(-2),
+                        Solved = false
+                    };
+
+                    await _context.Reports.AddAsync(report1);
+                    await _context.Reports.AddAsync(report2);
+                    await _context.Reports.AddAsync(report3);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
     }

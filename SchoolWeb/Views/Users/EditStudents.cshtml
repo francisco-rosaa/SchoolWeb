@@ -1,0 +1,140 @@
+﻿@model IEnumerable<SchoolWeb.Models.EditStudentsViewModel>
+@{
+    ViewData["Title"] = "Edit Students";
+}
+
+<link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<br>
+<br>
+<h3 class="text-center">Edit Students</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <table class="table table-hover table-responsive table-striped" id="StudentsTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProfilePicture)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FullName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Age)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Qualification)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.City)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td class="align-middle">
+                                <img src="@Url.Content(item.ProfilePicture)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Age)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Qualification)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td id="@item.Id" class="align-middle">
+                                <a asp-action="EditUserProfile" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                                &nbsp
+                                <a asp-action="DeleteProfile" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
+                            </td>
+                        </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="form-group text-center">
+            <a asp-action="RegisterStudent" class="btn btn-secondary">Register Student</a>
+        </div>
+    </div>
+</div>
+
+<div id="deleteDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Yes</button>
+                <button type="button" class="btn btn-secondary" id="btnNoDelete">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#StudentsTable').DataTable({
+                responsive: true,
+                columnDefs: [{
+                    "targets": [0, 6],
+                    "orderable": false,
+                    "searchable": false
+                }],
+                order: [[1, 'asc']]
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var id = 0;
+            $("a[id*=btnDeleteItem]").click(function () {
+                id = $(this).parent()[0].id;
+                $("#deleteDialog").modal("show");
+                return false;
+            });
+            $("#btnNoDelete").click(function () {
+                $("#deleteDialog").modal("hide");
+                return false;
+            });
+            $("#btnYesDelete").click(function () {
+                window.location.href = "/Users/DeleteProfile/" + id;
+            });
+        });
+    </script>
+
+}

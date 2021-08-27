@@ -1,0 +1,72 @@
+﻿@model SchoolWeb.Models.ReportsViewModel
+@{
+    ViewData["Title"] = "New Report";
+}
+
+<br>
+<br>
+<h3 class="text-center">New Report</h3>
+<br>
+<div class="row">
+    <div class="col-md-12 offset-md-2">
+        <form method="post">
+            <input type="hidden" asp-for="UserId" />
+            <div class="container">
+                <div class="row">
+                    <div class="form-group col-md-5">
+                        <label asp-for="Title">Title</label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label asp-for="Date" class="control-label"></label>
+                        <div class="input-group date" data-provide="datepicker">
+                            <input type="text" asp-for="Date" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Date" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <label asp-for="Message">Message</label>
+                        <textarea asp-for="Message" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Message" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 offset-md-2">
+                        <div class="form-group text-center">
+                            <input type="submit" value="Submit" class="btn btn-secondary" />
+                        </div>
+                        <div class="col-md-4 offset-md-4 nav-item text-center">
+                            <a asp-action="StaffIndexReports" class="nav-link text-dark">Back</a>
+                        </div>
+                        <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        if (document.getElementById("Date").value === "01/01/0001 00:00:00") {
+            document.getElementById("Date").value = "";
+        }
+        $('.date').datepicker({
+            format: 'dd/mm/yyyy',
+            orientation: "bottom",
+            autoclose: true
+        });
+    </script>
+}
