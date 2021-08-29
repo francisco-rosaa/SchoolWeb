@@ -197,7 +197,6 @@ namespace SchoolWeb.Controllers
             try
             {
                 await _coursesRepository.DeleteAsync(course);
-
             }
             catch (DbUpdateException ex)
             {

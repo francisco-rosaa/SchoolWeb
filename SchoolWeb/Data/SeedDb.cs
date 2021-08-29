@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Courses;
+using SchoolWeb.Data.Disciplines;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Helpers;
 
@@ -15,9 +16,9 @@ namespace SchoolWeb.Data
         private readonly IUserHelper _userHelper;
         private readonly IGenderRepository _genderRepository;
         private readonly IQualificationRepository _qualificationRepository;
-        private readonly IConfigurationRepository _configurationRepository;
         private readonly IReportRepository _reportRepository;
         private readonly ICoursesRepository _coursesRepository;
+        private readonly IDisciplinesRepository _disciplinesRepository;
 
         public SeedDb
             (
@@ -25,18 +26,18 @@ namespace SchoolWeb.Data
                 IUserHelper userHelper,
                 IGenderRepository genderRepository,
                 IQualificationRepository qualificationRepository,
-                IConfigurationRepository configurationRepository,
                 IReportRepository reportRepository,
-                ICoursesRepository coursesRepository
+                ICoursesRepository coursesRepository,
+                IDisciplinesRepository disciplinesRepository            
             )
         {
             _context = context;
             _userHelper = userHelper;
             _genderRepository = genderRepository;
             _qualificationRepository = qualificationRepository;
-            _configurationRepository = configurationRepository;
             _reportRepository = reportRepository;
             _coursesRepository = coursesRepository;
+            _disciplinesRepository = disciplinesRepository;
         }
 
         public async Task SeedAsync()
@@ -53,6 +54,7 @@ namespace SchoolWeb.Data
             await AddUserStudent2Async();
             await AddReportsAsync();
             await AddCourses();
+            await AddDisciplines();
         }
 
         private async Task AddRolesAsync()
@@ -272,10 +274,9 @@ namespace SchoolWeb.Data
                         Solved = false
                     };
 
-                    await _context.Reports.AddAsync(report1);
-                    await _context.Reports.AddAsync(report2);
-                    await _context.Reports.AddAsync(report3);
-                    await _context.SaveChangesAsync();
+                    await _reportRepository.CreateAsync(report1);
+                    await _reportRepository.CreateAsync(report2);
+                    await _reportRepository.CreateAsync(report3);
                 }
             }
         }
@@ -287,31 +288,64 @@ namespace SchoolWeb.Data
                 Course course1 = new Course
                 {
                     Code = "WEBTECH",
-                    Name = "Web Technologies",
-                    Area = "Web application development and technologies",
+                    Name = "Web Development And Technologies",
+                    Area = "Web Development",
                     Duration = 1150
                 };
 
                 Course course2 = new Course
                 {
                     Code = "BUSTECH",
-                    Name = "Business Technologies",
-                    Area = "Business technology management specialization",
+                    Name = "Business Technology Management",
+                    Area = "Business Technology",
                     Duration = 950
                 };
 
                 Course course3 = new Course
                 {
                     Code = "TECLEAD",
-                    Name = "Technology Leadership",
-                    Area = "Technology leadership and entrepreneurship",
+                    Name = "Technology Leadership And Entrepreneurship",
+                    Area = "Business Technology",
                     Duration = 675
                 };
 
-                await _context.Courses.AddAsync(course1);
-                await _context.Courses.AddAsync(course2);
-                await _context.Courses.AddAsync(course3);
-                await _context.SaveChangesAsync();
+                await _coursesRepository.CreateAsync(course1);
+                await _coursesRepository.CreateAsync(course2);
+                await _coursesRepository.CreateAsync(course3);
+            }
+        }
+
+        private async Task AddDisciplines()
+        {
+            if (await _disciplinesRepository.IsDisciplinesEmptyAsync())
+            {
+                Discipline discipline1 = new Discipline
+                {
+                    Code = "NETMVCC",
+                    Name = ".NET MVC Core Development",
+                    Area = "Web Development",
+                    Duration = 200
+                };
+
+                Discipline discipline2 = new Discipline
+                {
+                    Code = "FRNTEND",
+                    Name = "Front End Development",
+                    Area = "Web Development",
+                    Duration = 150
+                };
+
+                Discipline discipline3 = new Discipline
+                {
+                    Code = "DATASEC",
+                    Name = "Data Security And Infrastructure",
+                    Area = "Business Technology",
+                    Duration = 125
+                };
+
+                await _disciplinesRepository.CreateAsync(discipline1);
+                await _disciplinesRepository.CreateAsync(discipline2);
+                await _disciplinesRepository.CreateAsync(discipline3);
             }
         }
     }

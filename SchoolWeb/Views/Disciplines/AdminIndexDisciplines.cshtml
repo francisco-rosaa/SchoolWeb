@@ -1,20 +1,20 @@
-﻿@model IEnumerable<SchoolWeb.Models.Courses.CoursesViewModel>
+﻿@model IEnumerable<SchoolWeb.Models.Disciplines.DisciplinesViewModel>
 @{
-    ViewData["Title"] = "Courses";
+    ViewData["Title"] = "Disciplines";
 }
 
 <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
 
 <br>
 <br>
-<h3 class="text-center">Courses</h3>
+<h3 class="text-center">Disciplines</h3>
 <br>
 <br>
 <div class="row">
     <div class="col-md-12">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <table class="table table-hover table-responsive table-striped" id="AdminIndexCourses">
+                <table class="table table-hover table-responsive table-striped" id="AdminIndexDisciplines">
                     <thead>
                         <tr>
                             <th>
@@ -52,9 +52,9 @@
                                         @Html.DisplayFor(modelItem => item.Duration) Hours
                                     </td>
                                     <td id="@item.Id" class="align-middle">
-                                        <a asp-action="EditCourse" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                                        <a asp-action="EditDiscipline" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
                                         &nbsp
-                                        <a asp-action="DeleteCourse" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
+                                        <a asp-action="DeleteDiscipline" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
                                     </td>
                                 </tr>
                             }
@@ -66,7 +66,7 @@
         <br>
         <br>
         <div class="form-group text-center">
-            <a asp-action="RegisterCourse" class="btn btn-secondary">New Course</a>
+            <a asp-action="RegisterDiscipline" class="btn btn-secondary">New Discipline</a>
         </div>
     </div>
 </div>
@@ -103,7 +103,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#AdminIndexCourses').DataTable({
+            $('#AdminIndexDisciplines').DataTable({
                 responsive: true,
                 columnDefs: [{
                     "targets": [4],
@@ -128,7 +128,7 @@
                 return false;
             });
             $("#btnYesDelete").click(function () {
-                window.location.href = "/Courses/DeleteCourse/" + id;
+                window.location.href = "/Disciplines/DeleteDiscipline/" + id;
             });
         });
     </script>

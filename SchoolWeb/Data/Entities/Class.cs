@@ -16,6 +16,7 @@ namespace SchoolWeb.Data.Entities
 
 
         [MaxLength(100)]
+        [Required(ErrorMessage = "{0} is required")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "{0} must be {2} characters minimum and {1} characters maximum")]
         public string Name { get; set; }
 

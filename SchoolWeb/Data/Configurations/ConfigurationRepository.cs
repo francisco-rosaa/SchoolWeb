@@ -22,7 +22,7 @@ namespace SchoolWeb.Data
         {
             bool isSuccess = false;
 
-            var configurations = await _context.Configurations.FirstOrDefaultAsync();
+            var configurations = await GetConfigurations();
 
             if (configurations != null)
             {
