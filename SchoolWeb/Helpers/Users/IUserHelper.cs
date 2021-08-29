@@ -21,6 +21,10 @@ namespace SchoolWeb.Helpers
 
         Task<IdentityResult> UpdateUserAsync(User user);
 
+        Task<bool> IsCcNumberInUseOnRegisterAsync(string ccNumber);
+
+        Task<bool> IsCcNumberInUseOnEditAsync(string userId, string ccNumber);
+
         Task CheckRoleAsync(string roleName);
 
         Task<string> GetRoleByIdAsync(string roleId);

@@ -70,6 +70,18 @@ namespace SchoolWeb.Controllers
 
                 if (user == null)
                 {
+                    var isCcNumberInUse = await _userHelper.IsCcNumberInUseOnRegisterAsync(model.CcNumber);
+
+                    if (isCcNumberInUse)
+                    {
+                        ViewBag.Message = "<span class=\"text-danger\">CC Number already in use</span>";
+
+                        model.Roles = _userHelper.GetComboRoles();
+                        model.Genders = _genderRepository.GetComboGenders();
+                        model.Qualifications = _qualificationRepository.GetComboQualifications();
+                        return View(model);
+                    }
+
                     // Picture
                     string pictureName = string.Empty;
 
@@ -102,7 +114,7 @@ namespace SchoolWeb.Controllers
 
                     if (resultAdd != IdentityResult.Success)
                     {
-                        ModelState.AddModelError(string.Empty, "Failed to register user");
+                        ModelState.AddModelError(string.Empty, "Failed to save user");
                         return View(model);
                     }
 
@@ -110,7 +122,7 @@ namespace SchoolWeb.Controllers
                     string role = await _userHelper.GetRoleByIdAsync(model.RoleId);
                     await AddUserToRoleAsync(user, role);
 
-                    string message = "<span class=\"text-success\">Registration successful</span>";
+                    string message = "<span class=\"text-success\">Save successful</span>";
 
                     // Email
                     Response response = await SendRegistrationEmailAsync(user, model.Email, model.FullName);
@@ -166,6 +178,17 @@ namespace SchoolWeb.Controllers
 
                 if (user == null)
                 {
+                    var isCcNumberInUse = await _userHelper.IsCcNumberInUseOnRegisterAsync(model.CcNumber);
+
+                    if (isCcNumberInUse)
+                    {
+                        ViewBag.Message = "<span class=\"text-danger\">CC Number already in use</span>";
+
+                        model.Genders = _genderRepository.GetComboGenders();
+                        model.Qualifications = _qualificationRepository.GetComboQualifications();
+                        return View(model);
+                    }
+
                     // Picture
                     string profilePictureName = string.Empty;
                     string pictureName = string.Empty;
@@ -207,14 +230,14 @@ namespace SchoolWeb.Controllers
 
                     if (resultAdd != IdentityResult.Success)
                     {
-                        ModelState.AddModelError(string.Empty, "Failed to register student");
+                        ModelState.AddModelError(string.Empty, "Failed to save student");
                         return View(model);
                     }
 
                     // Role
                     await AddUserToRoleAsync(user, "Student");
 
-                    string message = "<span class=\"text-success\">Registration successful</span>";
+                    string message = "<span class=\"text-success\">Save successful</span>";
 
                     // Email
                     Response response = await SendRegistrationEmailAsync(user, model.Email, model.FullName);
@@ -466,11 +489,21 @@ namespace SchoolWeb.Controllers
                 user.LastName = model.LastName;
                 user.GenderId = model.GenderId;
                 user.QualificationId = model.QualificationId;
-                user.CcNumber = model.CcNumber;
                 user.BirthDate = model.BirthDate;
                 user.Address = model.Address;
                 user.City = model.City;
                 user.PhoneNumber = model.PhoneNumber;
+
+                var isCcNumberInUse = await _userHelper.IsCcNumberInUseOnEditAsync(model.UserId, model.CcNumber);
+
+                if (!isCcNumberInUse)
+                {
+                    user.CcNumber = model.CcNumber;
+                }
+                else
+                {
+                    message += "<br /><span class=\"text-danger\">CC Number already in use</span>";
+                }
 
                 if (!string.IsNullOrEmpty(profilePictureName))
                 {
@@ -496,7 +529,7 @@ namespace SchoolWeb.Controllers
                         await _userHelper.DeletePictureAsync(oldPictureName);
                     }
 
-                    message = "User profile updated";
+                    message += "<br />Profile saved";
 
                     if (!string.IsNullOrEmpty(profilePictureName))
                     {
@@ -595,7 +628,7 @@ namespace SchoolWeb.Controllers
             {
                 if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
                 {
-                    ViewBag.ErrorTitle = $"{user.FullName} In Use";
+                    ViewBag.ErrorTitle = $"'{user.FullName}' In Use";
                     ViewBag.ErrorMessage = "Cannot be deleted because it is in use by one or more records";
                 }
 

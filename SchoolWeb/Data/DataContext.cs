@@ -36,6 +36,18 @@ namespace SchoolWeb.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Class>()
+                .HasIndex(x => x.Code)
+                .IsUnique();
+
+            modelBuilder.Entity<Course>()
+                .HasIndex(x => x.Code)
+                .IsUnique();
+
+            modelBuilder.Entity<Discipline>()
+                .HasIndex(x => x.Code)
+                .IsUnique();
+
             var cascadeFKs = modelBuilder.Model.GetEntityTypes()
                 .SelectMany(x => x.GetForeignKeys())
                 .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);

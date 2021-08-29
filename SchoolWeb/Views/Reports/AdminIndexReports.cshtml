@@ -40,52 +40,49 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        @foreach (var item in Model)
+                        @if (Model != null)
                         {
-                            <tr>
-                                <td class="align-middle text-center">
-
-                                    @if (item.Solved == true)
-                                    {
-                                        <i style="font-size: 28px; color: darkgreen;" class="fa">&#xf14a;</i>
-                                    }
-                                    else
-                                    {
-                                        <i style="font-size: 26px; color: darkred;" class="fa">&#xf071;</i>
-                                    }
-
-                                </td>
-                                <td class="align-middle">
-                                    @Html.DisplayFor(modelItem => item.Age)
-                                </td>
-                                <td class="align-middle">
-                                    @Html.DisplayFor(modelItem => item.Title)
-                                </td>
-                                <td class="align-middle">
-                                    @Html.DisplayFor(modelItem => item.User.FullName)
-                                </td>
-                                <td class="align-middle">
-                                    @Html.DisplayFor(modelItem => item.Date)
-                                </td>
-                                <td class="align-middle">
-
-                                    @if (item.Solved == true)
-                                    {
-                                        @Html.DisplayFor(modelItem => item.SolvedDate)
-                                    }
-                                    else
-                                    {
-                                        <div>Pending</div>
-                                    }
-
-                                </td>
-                                <td id="@item.Id" class="align-middle">
-                                    <a asp-action="AdminReportDetails" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
-                                </td>
-                            </tr>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle text-center">
+                                        @if (item.Solved == true)
+                                        {
+                                            <i style="font-size: 28px; color: darkgreen;" class="fa">&#xf14a;</i>
+                                        }
+                                        else
+                                        {
+                                            <i style="font-size: 26px; color: darkred;" class="fa">&#xf071;</i>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Age)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.User.FullName)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (item.Solved == true)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.SolvedDate)
+                                        }
+                                        else
+                                        {
+                                            <div>Pending</div>
+                                        }
+                                    </td>
+                                    <td id="@item.Id" class="align-middle">
+                                        <a asp-action="AdminReportDetails" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
+                                    </td>
+                                </tr>
+                            }
                         }
-
                     </tbody>
                 </table>
             </div>
@@ -118,5 +115,4 @@
             });
         });
     </script>
-
 }

@@ -8,14 +8,10 @@ namespace SchoolWeb.Data.Entities
     {
         Task<bool> IsReportsEmptyAsync();
 
-        IQueryable<ReportsViewModel> GetAllReportsWithUsers();
-
-        Task<Report> GetReportByIdAsync(int Id);
+        Task<IQueryable<ReportsViewModel>> GetAllReportsWithUsersAsync();
 
         Task<ReportsViewModel> GetReportByIdWithUserAsync(int Id);
 
-        IQueryable<ReportsViewModel> GetAllReportsByUserAsync(string userId);
-
-        Task<int> SaveReportAsync(Report report);
+        Task<IQueryable<ReportsViewModel>> GetAllReportsByUserAsync(string userId);
     }
 }

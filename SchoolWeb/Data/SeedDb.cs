@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using SchoolWeb.Data.Entities;
-using SchoolWeb.Helpers;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SchoolWeb.Data.Courses;
+using SchoolWeb.Data.Entities;
+using SchoolWeb.Helpers;
 
 namespace SchoolWeb.Data
 {
@@ -16,6 +17,7 @@ namespace SchoolWeb.Data
         private readonly IQualificationRepository _qualificationRepository;
         private readonly IConfigurationRepository _configurationRepository;
         private readonly IReportRepository _reportRepository;
+        private readonly ICoursesRepository _coursesRepository;
 
         public SeedDb
             (
@@ -24,7 +26,8 @@ namespace SchoolWeb.Data
                 IGenderRepository genderRepository,
                 IQualificationRepository qualificationRepository,
                 IConfigurationRepository configurationRepository,
-                IReportRepository reportRepository
+                IReportRepository reportRepository,
+                ICoursesRepository coursesRepository
             )
         {
             _context = context;
@@ -33,6 +36,7 @@ namespace SchoolWeb.Data
             _qualificationRepository = qualificationRepository;
             _configurationRepository = configurationRepository;
             _reportRepository = reportRepository;
+            _coursesRepository = coursesRepository;
         }
 
         public async Task SeedAsync()
@@ -48,6 +52,7 @@ namespace SchoolWeb.Data
             await AddUserStudent1Async();
             await AddUserStudent2Async();
             await AddReportsAsync();
+            await AddCourses();
         }
 
         private async Task AddRolesAsync()
@@ -272,6 +277,41 @@ namespace SchoolWeb.Data
                     await _context.Reports.AddAsync(report3);
                     await _context.SaveChangesAsync();
                 }
+            }
+        }
+
+        private async Task AddCourses()
+        {
+            if (await _coursesRepository.IsCoursesEmptyAsync())
+            {
+                Course course1 = new Course
+                {
+                    Code = "WEBTECH",
+                    Name = "Web Technologies",
+                    Area = "Web application development and technologies",
+                    Duration = 1150
+                };
+
+                Course course2 = new Course
+                {
+                    Code = "BUSTECH",
+                    Name = "Business Technologies",
+                    Area = "Business technology management specialization",
+                    Duration = 950
+                };
+
+                Course course3 = new Course
+                {
+                    Code = "TECLEAD",
+                    Name = "Technology Leadership",
+                    Area = "Technology leadership and entrepreneurship",
+                    Duration = 675
+                };
+
+                await _context.Courses.AddAsync(course1);
+                await _context.Courses.AddAsync(course2);
+                await _context.Courses.AddAsync(course3);
+                await _context.SaveChangesAsync();
             }
         }
     }

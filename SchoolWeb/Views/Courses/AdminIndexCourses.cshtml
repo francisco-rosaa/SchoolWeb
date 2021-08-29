@@ -1,36 +1,33 @@
-﻿@model IEnumerable<SchoolWeb.Models.EditUsersViewModel>
+﻿@model IEnumerable<SchoolWeb.Models.Courses.CoursesViewModel>
 @{
-    ViewData["Title"] = "Edit Users";
+    ViewData["Title"] = "Courses";
 }
 
 <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
 
 <br>
 <br>
-<h3 class="text-center">Edit Users</h3>
+<h3 class="text-center">Courses</h3>
 <br>
 <br>
 <div class="row">
     <div class="col-md-12">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <table class="table table-hover table-responsive table-striped" id="UsersTable">
+                <table class="table table-hover table-responsive table-striped" id="AdminIndexCourses">
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.ProfilePicture)
+                                @Html.DisplayNameFor(model => model.Code)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.FullName)
+                                @Html.DisplayNameFor(model => model.Name)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.City)
+                                @Html.DisplayNameFor(model => model.AreaShort)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Email)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Role)
+                                @Html.DisplayNameFor(model => model.Duration)
                             </th>
                             <th>
                             </th>
@@ -43,24 +40,21 @@
                             {
                                 <tr>
                                     <td class="align-middle">
-                                        <img src="@Url.Content(item.ProfilePicture)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
+                                        @Html.DisplayFor(modelItem => item.Code)
                                     </td>
                                     <td class="align-middle">
-                                        @Html.DisplayFor(modelItem => item.FullName)
+                                        @Html.DisplayFor(modelItem => item.Name)
                                     </td>
                                     <td class="align-middle">
-                                        @Html.DisplayFor(modelItem => item.City)
+                                        @Html.DisplayFor(modelItem => item.AreaShort)
                                     </td>
                                     <td class="align-middle">
-                                        @Html.DisplayFor(modelItem => item.Email)
-                                    </td>
-                                    <td class="align-middle">
-                                        @Html.DisplayFor(modelItem => item.Role)
+                                        @Html.DisplayFor(modelItem => item.Duration) Hours
                                     </td>
                                     <td id="@item.Id" class="align-middle">
-                                        <a asp-action="EditUserProfile" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                                        <a asp-action="EditCourse" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
                                         &nbsp
-                                        <a asp-action="DeleteProfile" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
+                                        <a asp-action="DeleteCourse" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
                                     </td>
                                 </tr>
                             }
@@ -72,9 +66,16 @@
         <br>
         <br>
         <div class="form-group text-center">
-            <a asp-action="RegisterUser" class="btn btn-secondary">New User</a>
+            <a asp-action="RegisterCourse" class="btn btn-secondary">New Course</a>
         </div>
     </div>
+</div>
+<br>
+<br>
+<div class="text-success text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
 </div>
 
 <div id="deleteDialog" class="modal fade">
@@ -102,10 +103,10 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#UsersTable').DataTable({
+            $('#AdminIndexCourses').DataTable({
                 responsive: true,
                 columnDefs: [{
-                    "targets": [0, 5],
+                    "targets": [4],
                     "orderable": false,
                     "searchable": false
                 }],
@@ -127,7 +128,7 @@
                 return false;
             });
             $("#btnYesDelete").click(function () {
-                window.location.href = "/Users/DeleteProfile/" + id;
+                window.location.href = "/Courses/DeleteCourse/" + id;
             });
         });
     </script>

@@ -68,6 +68,20 @@ namespace SchoolWeb.Helpers
             return await _userManager.UpdateAsync(user);
         }
 
+        public async Task<bool> IsCcNumberInUseOnRegisterAsync(string ccNumber)
+        {
+            var user = await _context.Users.Where(x => x.CcNumber == ccNumber).FirstOrDefaultAsync();
+
+            return user != null ? true : false;
+        }
+
+        public async Task<bool> IsCcNumberInUseOnEditAsync(string userId, string ccNumber)
+        {
+            var user = await _context.Users.Where(x => x.Id != userId && x.CcNumber == ccNumber).FirstOrDefaultAsync();
+
+            return user != null ? true : false;
+        }
+
         public async Task CheckRoleAsync(string roleName)
         {
             var roleExists = await _roleManager.RoleExistsAsync(roleName);
@@ -228,7 +242,7 @@ namespace SchoolWeb.Helpers
 
         public async Task<IEnumerable<EditUsersViewModel>> GetUsersListAsync()
         {
-            IEnumerable<EditUsersViewModel> users = null;
+            var users = Enumerable.Empty<EditUsersViewModel>();
 
             await Task.Run(() =>
             {
@@ -249,7 +263,7 @@ namespace SchoolWeb.Helpers
                     Email = user.Email,
                     Role = role.Name,
                 }
-                ).ToList().Select(x => new EditUsersViewModel()
+                ).Select(x => new EditUsersViewModel()
                 {
                     Id = x.Id,
                     ProfilePicture = x.ProfilePicture,
@@ -265,7 +279,7 @@ namespace SchoolWeb.Helpers
 
         public async Task<IEnumerable<EditStudentsViewModel>> GetStudentsListAsync()
         {
-            IEnumerable<EditStudentsViewModel> students = null;
+            var students = Enumerable.Empty<EditStudentsViewModel>();
 
             await Task.Run(() =>
             {
@@ -289,7 +303,7 @@ namespace SchoolWeb.Helpers
                     City = user.City,
                     Email = user.Email
                 }
-                ).ToList().Select(x => new EditStudentsViewModel()
+                ).Select(x => new EditStudentsViewModel()
                 {
                     Id = x.Id,
                     ProfilePicture = x.ProfilePicture,

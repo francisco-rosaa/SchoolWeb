@@ -40,36 +40,37 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        @foreach (var item in Model)
+                        @if (Model != null)
                         {
-                        <tr>
-                            <td class="align-middle">
-                                <img src="@Url.Content(item.ProfilePicture)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
-                            </td>
-                            <td class="align-middle">
-                                @Html.DisplayFor(modelItem => item.FullName)
-                            </td>
-                            <td class="align-middle">
-                                @Html.DisplayFor(modelItem => item.Age)
-                            </td>
-                            <td class="align-middle">
-                                @Html.DisplayFor(modelItem => item.Qualification)
-                            </td>
-                            <td class="align-middle">
-                                @Html.DisplayFor(modelItem => item.City)
-                            </td>
-                            <td class="align-middle">
-                                @Html.DisplayFor(modelItem => item.Email)
-                            </td>
-                            <td id="@item.Id" class="align-middle">
-                                <a asp-action="EditUserProfile" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
-                                &nbsp
-                                <a asp-action="DeleteProfile" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
-                            </td>
-                        </tr>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle">
+                                        <img src="@Url.Content(item.ProfilePicture)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.FullName)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Age)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Qualification)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.City)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td id="@item.Id" class="align-middle">
+                                        <a asp-action="EditUserProfile" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                                        &nbsp
+                                        <a asp-action="DeleteProfile" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
+                                    </td>
+                                </tr>
+                            }
                         }
-
                     </tbody>
                 </table>
             </div>
@@ -77,7 +78,7 @@
         <br>
         <br>
         <div class="form-group text-center">
-            <a asp-action="RegisterStudent" class="btn btn-secondary">Register Student</a>
+            <a asp-action="RegisterStudent" class="btn btn-secondary">New Student</a>
         </div>
     </div>
 </div>
@@ -136,5 +137,4 @@
             });
         });
     </script>
-
 }

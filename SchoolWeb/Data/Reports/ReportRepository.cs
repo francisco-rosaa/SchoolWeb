@@ -20,9 +20,13 @@ namespace SchoolWeb.Data.Entities
             return await _context.Reports.FirstOrDefaultAsync() == null ? true : false;
         }
 
-        public IQueryable<ReportsViewModel> GetAllReportsWithUsers()
+        public async Task<IQueryable<ReportsViewModel>> GetAllReportsWithUsersAsync()
         {
-            return _context.Reports
+            var reports = Enumerable.Empty<ReportsViewModel>().AsQueryable();
+
+            await Task.Run(() =>
+            {
+                reports = _context.Reports
                 .Include(x => x.User)
                 .OrderBy(x => x.Date)
                 .Select(x => new ReportsViewModel()
@@ -36,11 +40,9 @@ namespace SchoolWeb.Data.Entities
                     Solved = x.Solved,
                     SolvedDate = x.SolvedDate
                 });
-        }
+            });
 
-        public async Task<Report> GetReportByIdAsync(int Id)
-        {
-            return await _context.Reports.Where(x => x.Id == Id).FirstOrDefaultAsync();
+            return reports;
         }
 
         public async Task<ReportsViewModel> GetReportByIdWithUserAsync(int Id)
@@ -68,9 +70,13 @@ namespace SchoolWeb.Data.Entities
             };
         }
 
-        public IQueryable<ReportsViewModel> GetAllReportsByUserAsync(string userId)
+        public async Task<IQueryable<ReportsViewModel>> GetAllReportsByUserAsync(string userId)
         {
-            return _context.Reports
+            var reports = Enumerable.Empty<ReportsViewModel>().AsQueryable();
+
+            await Task.Run(() =>
+            {
+                reports = _context.Reports
                 .Include(x => x.User)
                 .Where(x => x.UserId == userId)
                 .OrderBy(x => x.Date)
@@ -85,13 +91,9 @@ namespace SchoolWeb.Data.Entities
                     Solved = x.Solved,
                     SolvedDate = x.SolvedDate
                 });
-        }
+            });
 
-        public async Task<int> SaveReportAsync(Report report)
-        {
-            await _context.Reports.AddAsync(report);
-
-            return await _context.SaveChangesAsync();
+            return reports;
         }
     }
 }

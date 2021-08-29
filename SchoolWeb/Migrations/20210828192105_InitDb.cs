@@ -481,6 +481,12 @@ namespace SchoolWeb.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Classes_Code",
+                table: "Classes",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Classes_CourseId",
                 table: "Classes",
                 column: "CourseId");
@@ -504,6 +510,18 @@ namespace SchoolWeb.Migrations
                 name: "IX_CourseDisciplines_DisciplineId",
                 table: "CourseDisciplines",
                 column: "DisciplineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_Code",
+                table: "Courses",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Disciplines_Code",
+                table: "Disciplines",
+                column: "Code",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Evaluations_CourseId",

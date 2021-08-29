@@ -10,7 +10,7 @@ using SchoolWeb.Data;
 namespace SchoolWeb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210827174753_InitDb")]
+    [Migration("20210828192105_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,6 +213,9 @@ namespace SchoolWeb.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.HasIndex("CourseId");
 
                     b.ToTable("Classes");
@@ -285,6 +288,9 @@ namespace SchoolWeb.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("Courses");
                 });
 
@@ -335,6 +341,9 @@ namespace SchoolWeb.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("Disciplines");
                 });

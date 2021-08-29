@@ -29,18 +29,22 @@ namespace SchoolWeb.Controllers
                 ViewBag.Message = message;
             }
 
-            if (this.User.Identity.IsAuthenticated)
-            {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
-                if (user != null)
-                {
-                    TempData["SessionUserProfilePicture"] = user.ProfilePicturePath;
-                    TempData["SessionUserFirstName"] = user.FirstName;
-                }
+            if (user == null)
+            {
+                ViewBag.ErrorTitle = "User Not Found";
+                ViewBag.ErrorMessage = "User doesn't exist or there was an error";
+                return View("Error");
             }
 
-            var reports = _reportRepository.GetAllReportsWithUsers();
+            if (this.User.Identity.IsAuthenticated)
+            {
+                TempData["SessionUserProfilePicture"] = user.ProfilePicturePath;
+                TempData["SessionUserFirstName"] = user.FirstName;
+            }
+
+            var reports = await _reportRepository.GetAllReportsWithUsersAsync();
 
             if (!reports.Any())
             {
@@ -79,7 +83,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var report = await _reportRepository.GetReportByIdAsync(model.Id);
+                var report = await _reportRepository.GetByIdAsync(model.Id);
 
                 if (report == null)
                 {
@@ -137,7 +141,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            var reports = _reportRepository.GetAllReportsByUserAsync(user.Id);
+            var reports = await _reportRepository.GetAllReportsByUserAsync(user.Id);
 
             if (!reports.Any())
             {
@@ -216,12 +220,18 @@ namespace SchoolWeb.Controllers
                     Solved = false
                 };
 
-                var result = await _reportRepository.SaveReportAsync(report);
-
-                if (result > 0)
+                try
                 {
+                    await _reportRepository.CreateAsync(report);
+
                     string message = "Report added successfully";
                     return RedirectToAction("StaffIndexReports", "Reports", new { message });
+                }
+                catch
+                {
+                    ViewBag.ErrorTitle = "Report Not Added";
+                    ViewBag.ErrorMessage = "There was an error";
+                    return View("Error");
                 }
             }
 

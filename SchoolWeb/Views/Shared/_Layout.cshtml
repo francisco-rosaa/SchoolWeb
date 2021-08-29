@@ -30,9 +30,16 @@
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">School</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Courses" asp-action="AdminIndexCourses">Courses</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Disciplines" asp-action="AdminIndexDisciplines">Disciplines</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Users</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="RegisterUser">Register</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="RegisterUser">New</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="EditUsers">Edit</a></li>
                                 </ul>
                             </li>
@@ -40,7 +47,7 @@
                                 <a class="nav-link text-light" asp-area="" asp-controller="Reports" asp-action="AdminIndexReports">Reports</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Configurations">Configs</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Configurations">Config</a>
                             </li>
                         }
 
@@ -49,7 +56,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Students</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="RegisterStudent">Register</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="RegisterStudent">New</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="EditStudents">Edit</a></li>
                                 </ul>
                             </li>

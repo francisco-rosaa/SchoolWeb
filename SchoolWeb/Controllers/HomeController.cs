@@ -50,15 +50,6 @@ namespace SchoolWeb.Controllers
                 ViewBag.Message = message;
             }
 
-            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-
-            if (user == null)
-            {
-                ViewBag.ErrorTitle = "User Not Found";
-                ViewBag.ErrorMessage = "User doesn't exist or there was an error";
-                return View("Error");
-            }
-
             var configurations = await _configurationRepository.GetConfigurations();
 
             if (configurations == null)
@@ -85,20 +76,11 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-
-                if (user == null)
-                {
-                    ViewBag.ErrorTitle = "User Not Found";
-                    ViewBag.ErrorMessage = "User doesn't exist or there was an error";
-                    return View("Error");
-                }
-
                 var isSuccess = await _configurationRepository.SaveConfigurations(model.ClassMaxStudents, model.MaxPercentageAbsence);
 
                 if (isSuccess)
                 {
-                    string message = "Configurations updated successfully";
+                    string message = "Configuration saved successfully";
                     return RedirectToAction("Configurations", "Home", new { message });
                 }
             }

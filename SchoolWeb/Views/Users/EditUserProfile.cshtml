@@ -6,7 +6,6 @@
 <br>
 <br>
 <h3 class="text-center">Edit Profile</h3>
-<br>
 <div class="text-success text-center">
     <p>
         @Html.Raw(ViewBag.Message)
@@ -107,7 +106,6 @@
                         <input asp-for="PhoneNumber" class="form-control bg-light" />
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                     </div>
-
                     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
                     {
                         <div class="form-group col-md-4">
@@ -116,11 +114,9 @@
                             <span asp-validation-for="PictureFile" class="text-danger small"></span>
                         </div>
                     }
-
                 </div>
             </div>
             <br>
-
             @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
             {
                 <div class="form-group col-md-8">
@@ -132,12 +128,11 @@
                 </div>
                 <br>
             }
-
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 offset-md-2">
                         <div class="form-group text-center">
-                            <input type="submit" value="Update" class="btn btn-secondary" />
+                            <input type="submit" value="Save" class="btn btn-secondary" />
                         </div>
                         <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
                     </div>

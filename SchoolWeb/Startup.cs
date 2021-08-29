@@ -12,6 +12,7 @@ using SchoolWeb.Data;
 using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Helpers;
+using SchoolWeb.Helpers.Converters;
 
 namespace SchoolWeb
 {
@@ -55,7 +56,8 @@ namespace SchoolWeb
             services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
-
+            services.AddScoped<IConverterHelper, ConverterHelper>();
+            
             services.AddScoped<IGenderRepository, GenderRepository>();
             services.AddScoped<IQualificationRepository, QualificationRepository>();
             services.AddScoped<IReportRepository, ReportRepository>();
