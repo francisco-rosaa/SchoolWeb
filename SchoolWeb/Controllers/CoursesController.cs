@@ -44,7 +44,7 @@ namespace SchoolWeb.Controllers
 
             if (courses.Any())
             {
-                models = (_converterHelper.CoursesToViewModels(courses)).OrderBy(x => x.Name);
+                models = (_converterHelper.CoursesToCoursesViewModels(courses)).OrderBy(x => x.Name);
             }
             else
             {
@@ -121,7 +121,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            var model = _converterHelper.CourseToViewModel(course);
+            var model = _converterHelper.CourseToCoursesViewModel(course);
 
             return View(model);
         }
@@ -194,9 +194,12 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
+            string message = string.Empty;
+
             try
             {
                 await _coursesRepository.DeleteAsync(course);
+                message = "Course deleted successfully";
             }
             catch (DbUpdateException ex)
             {
@@ -209,7 +212,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            return RedirectToAction("AdminIndexCourses", "Courses");
+            return RedirectToAction("AdminIndexCourses", "Courses", new { message });
         }
     }
 }

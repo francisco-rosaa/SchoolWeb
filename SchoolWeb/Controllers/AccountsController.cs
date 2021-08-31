@@ -218,11 +218,17 @@ namespace SchoolWeb.Controllers
 
                 if (user != null)
                 {
+                    if (model.OldPassword == model.NewPassword)
+                    {
+                        ViewBag.Message = "New password must be different from old";
+                        return View(model);
+                    }
+
                     var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
                     if (result.Succeeded)
                     {
-                        string message = "Password changed successfully";
+                        string message = "<br />Password changed successfully";
 
                         return RedirectToAction("EditOwnProfile", "Users", new { message });
                     }

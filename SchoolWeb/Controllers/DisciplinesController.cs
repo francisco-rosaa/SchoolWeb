@@ -44,7 +44,7 @@ namespace SchoolWeb.Controllers
 
             if (disciplines.Any())
             {
-                models = (_converterHelper.DisciplinesToViewModels(disciplines)).OrderBy(x => x.Name);
+                models = (_converterHelper.DisciplinesToDisciplinesViewModels(disciplines)).OrderBy(x => x.Name);
             }
             else
             {
@@ -121,7 +121,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            var model = _converterHelper.DisciplineToViewModel(discipline);
+            var model = _converterHelper.DisciplineToDisciplinesViewModel(discipline);
 
             return View(model);
         }
@@ -194,9 +194,12 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
+            string message = string.Empty;
+
             try
             {
                 await _disciplinesRepository.DeleteAsync(discipline);
+                message = "Discipline deleted successfully";
             }
             catch (DbUpdateException ex)
             {
@@ -209,7 +212,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            return RedirectToAction("AdminIndexDisciplines", "Disciplines");
+            return RedirectToAction("AdminIndexDisciplines", "Disciplines", new { message });
         }
     }
 }

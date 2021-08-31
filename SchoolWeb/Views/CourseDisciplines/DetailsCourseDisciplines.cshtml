@@ -1,20 +1,22 @@
-﻿@model IEnumerable<SchoolWeb.Models.Disciplines.DisciplinesViewModel>
+﻿@model SchoolWeb.Models.CourseDisciplines.CourseDisciplinesViewModel
 @{
-    ViewData["Title"] = "Disciplines";
+    ViewData["Title"] = "Course Details";
 }
 
 <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
 
 <br>
 <br>
-<h3 class="text-center">Disciplines</h3>
+<h3 class="text-center">Course Details</h3>
 <br>
 <br>
 <div class="row">
     <div class="col-md-12">
         <div class="row justify-content-center">
             <div class="col-auto">
-                <table class="table table-hover table-responsive table-striped" id="AdminIndexDisciplines">
+                <input asp-for="CodeName" class="form-control font-weight-bold bg-secondary" style="height: 3rem; color: white;" disabled="disabled" />
+                <br>
+                <table class="table table-hover table-responsive table-striped" id="DetailsCourseDisciplines">
                     <thead>
                         <tr>
                             <th>
@@ -29,14 +31,12 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Duration)
                             </th>
-                            <th>
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (Model != null)
                         {
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.Disciplines)
                             {
                                 <tr>
                                     <td class="align-middle">
@@ -51,11 +51,6 @@
                                     <td class="align-middle">
                                         @Html.DisplayFor(modelItem => item.Duration) Hours
                                     </td>
-                                    <td id="@item.Id" class="align-middle">
-                                        <a asp-action="EditDiscipline" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
-                                        &nbsp
-                                        <a asp-action="DeleteDiscipline" asp-route-id="@item.Id" class="btn btn-light btn-outline-danger btn-sm" id="btnDeleteItem">Delete</a>
-                                    </td>
                                 </tr>
                             }
                         }
@@ -66,7 +61,10 @@
         <br>
         <br>
         <div class="form-group text-center">
-            <a asp-action="RegisterDiscipline" class="btn btn-secondary">New Discipline</a>
+            <a asp-action="EditCourseDisciplines" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a>
+        </div>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-action="StaffIndexCourses" class="nav-link text-dark">Back</a>
         </div>
     </div>
 </div>
@@ -77,24 +75,6 @@
     </p>
 </div>
 
-<div id="deleteDialog" class="modal fade">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Delete</h4>
-                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="btnYesDelete">Yes</button>
-                <button type="button" class="btn btn-secondary" id="btnNoDelete">No</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section Scripts{
 
     <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
@@ -102,32 +82,9 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#AdminIndexDisciplines').DataTable({
+            $('#DetailsCourseDisciplines').DataTable({
                 responsive: true,
-                columnDefs: [{
-                    "targets": [4],
-                    "orderable": false,
-                    "searchable": false
-                }],
                 order: [[1, 'asc']]
-            });
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var id = 0;
-            $("a[id*=btnDeleteItem]").click(function () {
-                id = $(this).parent()[0].id;
-                $("#deleteDialog").modal("show");
-                return false;
-            });
-            $("#btnNoDelete").click(function () {
-                $("#deleteDialog").modal("hide");
-                return false;
-            });
-            $("#btnYesDelete").click(function () {
-                window.location.href = "/Disciplines/DeleteDiscipline/" + id;
             });
         });
     </script>

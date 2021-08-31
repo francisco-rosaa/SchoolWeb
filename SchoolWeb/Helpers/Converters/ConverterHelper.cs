@@ -7,7 +7,7 @@ namespace SchoolWeb.Helpers.Converters
 {
     public class ConverterHelper : IConverterHelper
     {
-        public CoursesViewModel CourseToViewModel(Course course)
+        public CoursesViewModel CourseToCoursesViewModel(Course course)
         {
             return new CoursesViewModel
             {
@@ -19,7 +19,7 @@ namespace SchoolWeb.Helpers.Converters
             };
         }
 
-        public IQueryable<CoursesViewModel> CoursesToViewModels(IQueryable<Course> courses)
+        public IQueryable<CoursesViewModel> CoursesToCoursesViewModels(IQueryable<Course> courses)
         {
             return courses.Select(x => new CoursesViewModel
             {
@@ -31,7 +31,7 @@ namespace SchoolWeb.Helpers.Converters
             });
         }
 
-        public DisciplinesViewModel DisciplineToViewModel(Discipline discipline)
+        public DisciplinesViewModel DisciplineToDisciplinesViewModel(Discipline discipline)
         {
             return new DisciplinesViewModel
             {
@@ -43,7 +43,7 @@ namespace SchoolWeb.Helpers.Converters
             };
         }
 
-        public IQueryable<DisciplinesViewModel> DisciplinesToViewModels(IQueryable<Discipline> disciplines)
+        public IQueryable<DisciplinesViewModel> DisciplinesToDisciplinesViewModels(IQueryable<Discipline> disciplines)
         {
             return disciplines.Select(x => new DisciplinesViewModel
             {

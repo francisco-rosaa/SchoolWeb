@@ -1,0 +1,106 @@
+﻿@model SchoolWeb.Models.CourseDisciplines.CourseDisciplinesSelectableViewModel
+@{
+    ViewData["Title"] = "Edit Course Disciplines";
+}
+
+<link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<br>
+<br>
+<h3 class="text-center">Edit Course Disciplines</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <input type="hidden" asp-for="CourseId" />
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <input asp-for="CourseName" class="form-control font-weight-bold bg-secondary" style="height: 3rem; color: white;" disabled="disabled" />
+                    <br>
+                    <table class="table table-hover table-responsive table-striped" id="EditCourseDisciplines">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DisciplinesSelectable.FirstOrDefault().Code)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DisciplinesSelectable.FirstOrDefault().Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DisciplinesSelectable.FirstOrDefault().Area)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DisciplinesSelectable.FirstOrDefault().Duration)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DisciplinesSelectable.FirstOrDefault().IsSelected)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                @for (int i = 0; i < Model.DisciplinesSelectable.Count(); i++)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <input type="hidden" asp-for="@Model.DisciplinesSelectable[i].Id" />
+                                            @Html.DisplayFor(modelItem => @Model.DisciplinesSelectable[i].Code)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => @Model.DisciplinesSelectable[i].Name)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.DisciplinesSelectable[i].Area)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.DisciplinesSelectable[i].Duration) Hours
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.CheckBoxFor(modelItem => Model.DisciplinesSelectable[i].IsSelected)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="form-group text-center">
+                <input type="submit" value="Update" class="btn btn-secondary" />
+            </div>
+        </form>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-action="DetailsCourseDisciplines" asp-route-id="@Model.CourseId" class="nav-link text-dark">Back</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="text-success text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
+
+@section Scripts{
+
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#EditCourseDisciplines').DataTable({
+                responsive: true,
+                columnDefs: [{
+                    "targets": [4],
+                    "orderable": false,
+                    "searchable": false
+                }],
+                order: [[1, 'asc']]
+            });
+        });
+    </script>
+}

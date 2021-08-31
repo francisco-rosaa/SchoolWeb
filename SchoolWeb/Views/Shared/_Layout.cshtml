@@ -54,10 +54,19 @@
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
                         {
                             <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">School</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="CourseDisciplines" asp-action="StaffIndexCourses">Courses</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Classes" asp-action="">Classes</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Students</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="RegisterStudent">New</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="EditStudents">Edit</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Evaluations" asp-action="">Evaluation</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Absences" asp-action="">Absences</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item">

@@ -320,8 +320,13 @@ namespace SchoolWeb.Controllers
 
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> EditUsers()
+        public async Task<IActionResult> EditUsers(string message)
         {
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.Message = message;
+            }
+
             var users = await _userHelper.GetUsersListAsync();
 
             return View(users);
@@ -329,8 +334,13 @@ namespace SchoolWeb.Controllers
 
 
         [Authorize(Roles = "Staff")]
-        public async Task<IActionResult> EditStudents()
+        public async Task<IActionResult> EditStudents(string message)
         {
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.Message = message;
+            }
+
             var students = await _userHelper.GetStudentsListAsync();
 
             return View(students);
@@ -600,9 +610,11 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
+            string message = string.Empty;
             try
             {
                 await _userHelper.DeleteUserAsync(user);
+                message = "Profile deleted successfully";
 
                 if (!string.IsNullOrEmpty(user.ProfilePicture))
                 {
@@ -616,12 +628,12 @@ namespace SchoolWeb.Controllers
 
                 if (this.User.IsInRole("Admin"))
                 {
-                    return RedirectToAction(nameof(EditUsers));
+                    return RedirectToAction($"EditUsers", "Users", new { message });
                 }
 
                 if (this.User.IsInRole("Staff"))
                 {
-                    return RedirectToAction(nameof(EditStudents));
+                    return RedirectToAction($"EditStudents", "Users", new { message });
                 }
             }
             catch (DbUpdateException ex)

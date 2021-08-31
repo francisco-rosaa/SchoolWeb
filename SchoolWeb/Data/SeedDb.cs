@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SchoolWeb.Data.CourseDisciplines;
 using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Disciplines;
 using SchoolWeb.Data.Entities;
@@ -19,6 +20,7 @@ namespace SchoolWeb.Data
         private readonly IReportRepository _reportRepository;
         private readonly ICoursesRepository _coursesRepository;
         private readonly IDisciplinesRepository _disciplinesRepository;
+        private readonly ICourseDisciplinesRepository _courseDisciplinesRepository;
 
         public SeedDb
             (
@@ -28,7 +30,8 @@ namespace SchoolWeb.Data
                 IQualificationRepository qualificationRepository,
                 IReportRepository reportRepository,
                 ICoursesRepository coursesRepository,
-                IDisciplinesRepository disciplinesRepository            
+                IDisciplinesRepository disciplinesRepository,
+                ICourseDisciplinesRepository courseDisciplinesRepository
             )
         {
             _context = context;
@@ -38,6 +41,7 @@ namespace SchoolWeb.Data
             _reportRepository = reportRepository;
             _coursesRepository = coursesRepository;
             _disciplinesRepository = disciplinesRepository;
+            _courseDisciplinesRepository = courseDisciplinesRepository;
         }
 
         public async Task SeedAsync()
@@ -55,6 +59,7 @@ namespace SchoolWeb.Data
             await AddReportsAsync();
             await AddCourses();
             await AddDisciplines();
+            await AddCourseDisciplines();
         }
 
         private async Task AddRolesAsync()
@@ -346,6 +351,41 @@ namespace SchoolWeb.Data
                 await _disciplinesRepository.CreateAsync(discipline1);
                 await _disciplinesRepository.CreateAsync(discipline2);
                 await _disciplinesRepository.CreateAsync(discipline3);
+            }
+        }
+
+        private async Task AddCourseDisciplines()
+        {
+            if(await _courseDisciplinesRepository.IsCourseDisciplinesEmptyAsync())
+            {
+                var course1 = await _coursesRepository.GetByCodeAsync("WEBTECH");
+                var course2 = await _coursesRepository.GetByCodeAsync("BUSTECH");
+
+                var discicline1 = await _disciplinesRepository.GetByCodeAsync("NETMVCC");
+                var discicline2 = await _disciplinesRepository.GetByCodeAsync("FRNTEND");
+                var discicline3 = await _disciplinesRepository.GetByCodeAsync("DATASEC");
+
+                CourseDiscipline courseDiscipline1 = new CourseDiscipline
+                {
+                    CourseId = course1.Id,
+                    DisciplineId = discicline1.Id
+                };
+
+                CourseDiscipline courseDiscipline2 = new CourseDiscipline
+                {
+                    CourseId = course1.Id,
+                    DisciplineId = discicline2.Id
+                };
+
+                CourseDiscipline courseDiscipline3 = new CourseDiscipline
+                {
+                    CourseId = course2.Id,
+                    DisciplineId = discicline3.Id
+                };
+
+                await _courseDisciplinesRepository.CreateAsync(courseDiscipline1);
+                await _courseDisciplinesRepository.CreateAsync(courseDiscipline2);
+                await _courseDisciplinesRepository.CreateAsync(courseDiscipline3);
             }
         }
     }

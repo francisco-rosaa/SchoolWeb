@@ -7,12 +7,12 @@ namespace SchoolWeb.Helpers.Converters
 {
     public interface IConverterHelper
     {
-        CoursesViewModel CourseToViewModel(Course course);
+        CoursesViewModel CourseToCoursesViewModel(Course course);
 
-        IQueryable<CoursesViewModel> CoursesToViewModels(IQueryable<Course> courses);
+        IQueryable<CoursesViewModel> CoursesToCoursesViewModels(IQueryable<Course> courses);
 
-        DisciplinesViewModel DisciplineToViewModel(Discipline discipline);
+        DisciplinesViewModel DisciplineToDisciplinesViewModel(Discipline discipline);
 
-        IQueryable<DisciplinesViewModel> DisciplinesToViewModels(IQueryable<Discipline> disciplines);
+        IQueryable<DisciplinesViewModel> DisciplinesToDisciplinesViewModels(IQueryable<Discipline> disciplines);
     }
 }
