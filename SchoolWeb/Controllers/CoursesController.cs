@@ -13,18 +13,18 @@ namespace SchoolWeb.Controllers
 {
     public class CoursesController : Controller
     {
-        private readonly ICoursesRepository _coursesRepository;
+        private readonly ICourseRepository _courseRepository;
         private readonly IUserHelper _userHelper;
         private readonly IConverterHelper _converterHelper;
 
         public CoursesController
             (
-                ICoursesRepository coursesRepository,
+                ICourseRepository courseRepository,
                 IUserHelper userHelper,
                 IConverterHelper converterHelper
             )
         {
-            _coursesRepository = coursesRepository;
+            _courseRepository = courseRepository;
             _userHelper = userHelper;
             _converterHelper = converterHelper;
         }
@@ -40,7 +40,7 @@ namespace SchoolWeb.Controllers
 
             var models = Enumerable.Empty<CoursesViewModel>();
 
-            var courses = _coursesRepository.GetAll();
+            var courses = _courseRepository.GetAll();
 
             if (courses.Any())
             {
@@ -69,7 +69,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isCodeUsed = await _coursesRepository.IsCodeInUseOnRegisterAsync(model.Code);
+                var isCodeUsed = await _courseRepository.IsCodeInUseOnRegisterAsync(model.Code);
 
                 if (isCodeUsed)
                 {
@@ -87,7 +87,7 @@ namespace SchoolWeb.Controllers
 
                 try
                 {
-                    await _coursesRepository.CreateAsync(course);
+                    await _courseRepository.CreateAsync(course);
 
                     string message = "Course added successfully";
                     return RedirectToAction("AdminIndexCourses", "Courses", new { message });
@@ -112,7 +112,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("AdminIndexCourses", "Courses");
             }
 
-            var course = await _coursesRepository.GetByIdAsync(Id);
+            var course = await _courseRepository.GetByIdAsync(Id);
 
             if (course == null)
             {
@@ -134,7 +134,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isCodeInUse = await _coursesRepository.IsCodeInUseOnEditAsync(model.Id, model.Code);
+                var isCodeInUse = await _courseRepository.IsCodeInUseOnEditAsync(model.Id, model.Code);
 
                 if (isCodeInUse)
                 {
@@ -142,7 +142,7 @@ namespace SchoolWeb.Controllers
                     return View(model);
                 }
 
-                var course = await _coursesRepository.GetByIdAsync(model.Id);
+                var course = await _courseRepository.GetByIdAsync(model.Id);
 
                 if (course != null)
                 {
@@ -153,7 +153,7 @@ namespace SchoolWeb.Controllers
 
                     try
                     {
-                        await _coursesRepository.UpdateAsync(course);
+                        await _courseRepository.UpdateAsync(course);
 
                         ViewBag.Message = "Course saved successfully";
                         return View(model);
@@ -185,7 +185,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            var course = await _coursesRepository.GetByIdAsync(Id);
+            var course = await _courseRepository.GetByIdAsync(Id);
   
             if (course == null)
             {
@@ -198,7 +198,7 @@ namespace SchoolWeb.Controllers
 
             try
             {
-                await _coursesRepository.DeleteAsync(course);
+                await _courseRepository.DeleteAsync(course);
                 message = "Course deleted successfully";
             }
             catch (DbUpdateException ex)

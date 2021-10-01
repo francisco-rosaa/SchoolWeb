@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Classes;
 using SchoolWeb.Models.Courses;
 using SchoolWeb.Models.Disciplines;
 
@@ -7,6 +9,13 @@ namespace SchoolWeb.Helpers.Converters
 {
     public class ConverterHelper : IConverterHelper
     {
+        private readonly ICourseRepository _courseRepository;
+
+        public ConverterHelper(ICourseRepository courseRepository)
+        {
+            _courseRepository = courseRepository;
+        }
+
         public CoursesViewModel CourseToCoursesViewModel(Course course)
         {
             return new CoursesViewModel
@@ -15,7 +24,7 @@ namespace SchoolWeb.Helpers.Converters
                 Code = course.Code,
                 Name = course.Name,
                 Area = course.Area,
-                Duration = course.Duration,
+                Duration = course.Duration
             };
         }
 
@@ -27,7 +36,7 @@ namespace SchoolWeb.Helpers.Converters
                 Code = x.Code,
                 Name = x.Name,
                 Area = x.Area,
-                Duration = x.Duration,
+                Duration = x.Duration
             });
         }
 
@@ -39,7 +48,7 @@ namespace SchoolWeb.Helpers.Converters
                 Code = discipline.Code,
                 Name = discipline.Name,
                 Area = discipline.Area,
-                Duration = discipline.Duration,
+                Duration = discipline.Duration
             };
         }
 
@@ -51,8 +60,50 @@ namespace SchoolWeb.Helpers.Converters
                 Code = x.Code,
                 Name = x.Name,
                 Area = x.Area,
-                Duration = x.Duration,
+                Duration = x.Duration
             });
+        }
+
+        public ClassesViewModel ClassToClassesViewModel(Class clas)
+        {
+            return new ClassesViewModel
+            {
+                Id = clas.Id,
+                Code = clas.Code,
+                Name = clas.Name,
+                CourseId = clas.CourseId,
+                Course = clas.Course,
+                StartDate = clas.StartDate,
+                EndDate = clas.EndDate
+            };
+        }
+
+        public IQueryable<ClassesViewModel> ClassesToClassesViewModels(IQueryable<Class> classes)
+        {
+            return classes.Select(x => new ClassesViewModel
+            {
+                Id = x.Id,
+                Code = x.Code,
+                Name = x.Name,
+                CourseId = x.CourseId,
+                Course = x.Course,
+                StartDate  = x.StartDate, 
+                EndDate = x.EndDate
+            });
+        }
+
+        public RegisterClassViewModel ClassToRegisterClassViewModel(Class clas)
+        {
+            return new RegisterClassViewModel
+            {
+                Id = clas.Id,
+                Code = clas.Code,
+                Name = clas.Name,
+                CourseId = clas.CourseId,
+                Courses = _courseRepository.GetComboCourses(),
+                StartDate = clas.StartDate,
+                EndDate = clas.EndDate
+            };
         }
     }
 }

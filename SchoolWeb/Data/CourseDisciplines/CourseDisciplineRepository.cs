@@ -6,11 +6,11 @@ using SchoolWeb.Models.CourseDisciplines;
 
 namespace SchoolWeb.Data.CourseDisciplines
 {
-    public class CourseDisciplinesRepository : GenericRepository<CourseDiscipline>, ICourseDisciplinesRepository
+    public class CourseDisciplineRepository : GenericRepository<CourseDiscipline>, ICourseDisciplineRepository
     {
         private readonly DataContext _context;
 
-        public CourseDisciplinesRepository(DataContext context)
+        public CourseDisciplineRepository(DataContext context)
             : base(context)
         {
             _context = context;

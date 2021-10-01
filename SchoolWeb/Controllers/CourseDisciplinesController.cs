@@ -14,22 +14,22 @@ namespace SchoolWeb.Controllers
 {
     public class CourseDisciplinesController : Controller
     {
-        private readonly ICoursesRepository _coursesRepository;
-        private readonly IDisciplinesRepository _disciplinesRepository;
-        private readonly ICourseDisciplinesRepository _courseDisciplinesRepository;
+        private readonly ICourseRepository _courseRepository;
+        private readonly IDisciplineRepository _disciplineRepository;
+        private readonly ICourseDisciplineRepository _courseDisciplineRepository;
         private readonly IConverterHelper _converterHelper;
 
         public CourseDisciplinesController
             (
-                ICoursesRepository coursesRepository,
-                IDisciplinesRepository disciplinesRepository,
-                ICourseDisciplinesRepository courseDisciplinesRepository,
+                ICourseRepository coursesRepository,
+                IDisciplineRepository disciplineRepository,
+                ICourseDisciplineRepository courseDisciplineRepository,
                 IConverterHelper converterHelper
             )
         {
-            _coursesRepository = coursesRepository;
-            _disciplinesRepository = disciplinesRepository;
-            _courseDisciplinesRepository = courseDisciplinesRepository;
+            _courseRepository = coursesRepository;
+            _disciplineRepository = disciplineRepository;
+            _courseDisciplineRepository = courseDisciplineRepository;
             _converterHelper = converterHelper;
         }
 
@@ -39,7 +39,7 @@ namespace SchoolWeb.Controllers
         {
             var models = Enumerable.Empty<CoursesViewModel>();
 
-            var courses = _coursesRepository.GetAll();
+            var courses = _courseRepository.GetAll();
 
             if (courses.Any())
             {
@@ -67,7 +67,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("StaffIndexCourses", "CourseDisciplines");
             }
 
-            var course = await _coursesRepository.GetByIdAsync(Id);
+            var course = await _courseRepository.GetByIdAsync(Id);
 
             if (course == null)
             {
@@ -76,7 +76,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            var disciplines = await _courseDisciplinesRepository.GetDisciplinesByCourseIdAsync(course.Id);
+            var disciplines = await _courseDisciplineRepository.GetDisciplinesByCourseIdAsync(course.Id);
 
             if (!disciplines.Any())
             {
@@ -105,7 +105,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("StaffIndexCourses", "CourseDisciplines");
             }
 
-            var course = await _coursesRepository.GetByIdAsync(Id);
+            var course = await _courseRepository.GetByIdAsync(Id);
 
             if (course == null)
             {
@@ -114,7 +114,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            var disciplinesSelectable = await _courseDisciplinesRepository.GetAllDisciplinesSelectableAsync(course.Id);
+            var disciplinesSelectable = await _courseDisciplineRepository.GetAllDisciplinesSelectableAsync(course.Id);
 
             var model = new CourseDisciplinesSelectableViewModel
             {
@@ -134,7 +134,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var course = await _coursesRepository.GetByIdAsync(model.CourseId);
+                var course = await _courseRepository.GetByIdAsync(model.CourseId);
 
                 if (course == null)
                 {
@@ -154,11 +154,11 @@ namespace SchoolWeb.Controllers
                 {
                     foreach (var discipline in model.DisciplinesSelectable)
                     {
-                        var courseDiscipline = await _courseDisciplinesRepository.GetCourseDisciplineAsync(model.CourseId, discipline.Id);
+                        var courseDiscipline = await _courseDisciplineRepository.GetCourseDisciplineAsync(model.CourseId, discipline.Id);
 
                         if (courseDiscipline == null && discipline.IsSelected)
                         {
-                            await _courseDisciplinesRepository.CreateAsync(new CourseDiscipline
+                            await _courseDisciplineRepository.CreateAsync(new CourseDiscipline
                             {
                                 CourseId = model.CourseId,
                                 DisciplineId = discipline.Id
@@ -167,7 +167,7 @@ namespace SchoolWeb.Controllers
 
                         if (courseDiscipline != null && !discipline.IsSelected)
                         {
-                            await _courseDisciplinesRepository.DeleteAsync(courseDiscipline);
+                            await _courseDisciplineRepository.DeleteAsync(courseDiscipline);
                         }
                     }
                 }

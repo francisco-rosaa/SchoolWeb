@@ -1,0 +1,123 @@
+﻿@model SchoolWeb.Models.Classes.RegisterClassViewModel
+@{
+    ViewData["Title"] = "Edit Class";
+}
+
+<br>
+<br>
+<h3 class="text-center">Edit Class</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="post">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label asp-for="Code">Code</label>
+                    <input asp-for="Code" class="form-control bg-light" />
+                    <span asp-validation-for="Code" class="text-danger small"></span>
+                </div>
+                <div class="form-group col-md-9">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control bg-light" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseId" class="control-label"></label>
+                <select asp-for="CourseId" asp-items="Model.Courses" class="form-control"></select>
+                <span asp-validation-for="CourseId" class="text-danger small"></span>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <div class="input-group date" data-provide="datepicker">
+                        <input type="text" asp-for="StartDate" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="StartDate" class="text-danger small"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="EndDate" class="control-label"></label>
+                    <div class="input-group date" data-provide="datepicker">
+                        <input type="text" asp-for="EndDate" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="EndDate" class="text-danger small"></span>
+                </div>
+            </div>
+            <br>
+            <div id="@Model.Id" class="form-group text-center">
+                <input type="submit" value="Update" class="btn btn-secondary" />
+                &nbsp
+                <a asp-action="DeleteClass" asp-route-id="@Model.Id" class="btn btn-light btn-outline-danger" id="btnDeleteItem">Delete</a>
+            </div>
+            <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
+        </form>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-controller="Classes" asp-action="StaffIndexClasses" class="nav-link text-dark">Back</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="text-success text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
+
+<div id="deleteDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Yes</button>
+                <button type="button" class="btn btn-secondary" id="btnNoDelete">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        document.getElementById("StartDate").value = document.getElementById("StartDate").value.split(' ')[0];
+        document.getElementById("EndDate").value = document.getElementById("EndDate").value.split(' ')[0];
+
+        $('.date').datepicker({
+            format: 'dd/mm/yyyy',
+            orientation: "bottom",
+            autoclose: true
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var id = 0;
+            $("a[id*=btnDeleteItem]").click(function () {
+                id = $(this).parent()[0].id;
+                $("#deleteDialog").modal("show");
+                return false;
+            });
+            $("#btnNoDelete").click(function () {
+                $("#deleteDialog").modal("hide");
+                return false;
+            });
+            $("#btnYesDelete").click(function () {
+                window.location.href = "/Classes/DeleteClass/" + id;
+            });
+        });
+    </script>
+}
+

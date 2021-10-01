@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SchoolWeb.Data.Classes;
 using SchoolWeb.Data.CourseDisciplines;
 using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Disciplines;
@@ -18,9 +19,10 @@ namespace SchoolWeb.Data
         private readonly IGenderRepository _genderRepository;
         private readonly IQualificationRepository _qualificationRepository;
         private readonly IReportRepository _reportRepository;
-        private readonly ICoursesRepository _coursesRepository;
-        private readonly IDisciplinesRepository _disciplinesRepository;
-        private readonly ICourseDisciplinesRepository _courseDisciplinesRepository;
+        private readonly ICourseRepository _courseRepository;
+        private readonly IDisciplineRepository _disciplineRepository;
+        private readonly ICourseDisciplineRepository _courseDisciplineRepository;
+        private readonly IClassRepository _classRepository;
 
         public SeedDb
             (
@@ -29,9 +31,10 @@ namespace SchoolWeb.Data
                 IGenderRepository genderRepository,
                 IQualificationRepository qualificationRepository,
                 IReportRepository reportRepository,
-                ICoursesRepository coursesRepository,
-                IDisciplinesRepository disciplinesRepository,
-                ICourseDisciplinesRepository courseDisciplinesRepository
+                ICourseRepository courseRepository,
+                IDisciplineRepository disciplineRepository,
+                ICourseDisciplineRepository courseDisciplinesRepository,
+                IClassRepository classRepository
             )
         {
             _context = context;
@@ -39,9 +42,10 @@ namespace SchoolWeb.Data
             _genderRepository = genderRepository;
             _qualificationRepository = qualificationRepository;
             _reportRepository = reportRepository;
-            _coursesRepository = coursesRepository;
-            _disciplinesRepository = disciplinesRepository;
-            _courseDisciplinesRepository = courseDisciplinesRepository;
+            _courseRepository = courseRepository;
+            _disciplineRepository = disciplineRepository;
+            _courseDisciplineRepository = courseDisciplinesRepository;
+            _classRepository = classRepository;
         }
 
         public async Task SeedAsync()
@@ -54,12 +58,12 @@ namespace SchoolWeb.Data
             await AddConfigurations();
             await AddUserAdminAsync();
             await AddUserStaffAsync();
-            await AddUserStudent1Async();
-            await AddUserStudent2Async();
+            await AddUsersStudentsAsync();
             await AddReportsAsync();
-            await AddCourses();
-            await AddDisciplines();
-            await AddCourseDisciplines();
+            await AddCoursesAsync();
+            await AddDisciplinesAsync();
+            await AddCourseDisciplinesAsync();
+            await AddClassesAsync();
         }
 
         private async Task AddRolesAsync()
@@ -162,6 +166,13 @@ namespace SchoolWeb.Data
             await IsUserInRole(userStaff, "Staff");
         }
 
+        private async Task AddUsersStudentsAsync()
+        {
+            await AddUserStudent1Async();
+            await AddUserStudent2Async();
+            await AddUserStudent3Async();
+        }
+
         private async Task AddUserStudent1Async()
         {
             var userStudent = await _userHelper.GetUserByEmailAsync("student1@gmail.com");
@@ -209,6 +220,34 @@ namespace SchoolWeb.Data
                     City = "Porto",
                     PhoneNumber = "+351658789123",
                     Email = "student2@gmail.com",
+                    PasswordChanged = true
+                };
+
+                await AddUserWithRoleAsync(userStudent, "Student");
+            }
+
+            await IsUserInRole(userStudent, "Student");
+        }
+
+        private async Task AddUserStudent3Async()
+        {
+            var userStudent = await _userHelper.GetUserByEmailAsync("student3@gmail.com");
+
+            if (userStudent == null)
+            {
+                userStudent = new User
+                {
+                    UserName = "student3@gmail.com",
+                    FirstName = "Marie",
+                    LastName = "Curie",
+                    GenderId = _context.Genders.Where(x => x.Name == "Female").FirstOrDefault().Id,
+                    QualificationId = _context.Qualifications.Where(x => x.Name == "Level 4").FirstOrDefault().Id,
+                    CcNumber = "6777123456",
+                    BirthDate = DateTime.Today.AddYears(-22),
+                    Address = "Moon Street, 18",
+                    City = "Faro",
+                    PhoneNumber = "+351658789777",
+                    Email = "student3@gmail.com",
                     PasswordChanged = true
                 };
 
@@ -286,9 +325,9 @@ namespace SchoolWeb.Data
             }
         }
 
-        private async Task AddCourses()
+        private async Task AddCoursesAsync()
         {
-            if (await _coursesRepository.IsCoursesEmptyAsync())
+            if (await _courseRepository.IsCoursesEmptyAsync())
             {
                 Course course1 = new Course
                 {
@@ -314,15 +353,15 @@ namespace SchoolWeb.Data
                     Duration = 675
                 };
 
-                await _coursesRepository.CreateAsync(course1);
-                await _coursesRepository.CreateAsync(course2);
-                await _coursesRepository.CreateAsync(course3);
+                await _courseRepository.CreateAsync(course1);
+                await _courseRepository.CreateAsync(course2);
+                await _courseRepository.CreateAsync(course3);
             }
         }
 
-        private async Task AddDisciplines()
+        private async Task AddDisciplinesAsync()
         {
-            if (await _disciplinesRepository.IsDisciplinesEmptyAsync())
+            if (await _disciplineRepository.IsDisciplinesEmptyAsync())
             {
                 Discipline discipline1 = new Discipline
                 {
@@ -348,22 +387,22 @@ namespace SchoolWeb.Data
                     Duration = 125
                 };
 
-                await _disciplinesRepository.CreateAsync(discipline1);
-                await _disciplinesRepository.CreateAsync(discipline2);
-                await _disciplinesRepository.CreateAsync(discipline3);
+                await _disciplineRepository.CreateAsync(discipline1);
+                await _disciplineRepository.CreateAsync(discipline2);
+                await _disciplineRepository.CreateAsync(discipline3);
             }
         }
 
-        private async Task AddCourseDisciplines()
+        private async Task AddCourseDisciplinesAsync()
         {
-            if(await _courseDisciplinesRepository.IsCourseDisciplinesEmptyAsync())
+            if(await _courseDisciplineRepository.IsCourseDisciplinesEmptyAsync())
             {
-                var course1 = await _coursesRepository.GetByCodeAsync("WEBTECH");
-                var course2 = await _coursesRepository.GetByCodeAsync("BUSTECH");
+                var course1 = await _courseRepository.GetByCodeAsync("WEBTECH");
+                var course2 = await _courseRepository.GetByCodeAsync("BUSTECH");
 
-                var discicline1 = await _disciplinesRepository.GetByCodeAsync("NETMVCC");
-                var discicline2 = await _disciplinesRepository.GetByCodeAsync("FRNTEND");
-                var discicline3 = await _disciplinesRepository.GetByCodeAsync("DATASEC");
+                var discicline1 = await _disciplineRepository.GetByCodeAsync("NETMVCC");
+                var discicline2 = await _disciplineRepository.GetByCodeAsync("FRNTEND");
+                var discicline3 = await _disciplineRepository.GetByCodeAsync("DATASEC");
 
                 CourseDiscipline courseDiscipline1 = new CourseDiscipline
                 {
@@ -383,9 +422,50 @@ namespace SchoolWeb.Data
                     DisciplineId = discicline3.Id
                 };
 
-                await _courseDisciplinesRepository.CreateAsync(courseDiscipline1);
-                await _courseDisciplinesRepository.CreateAsync(courseDiscipline2);
-                await _courseDisciplinesRepository.CreateAsync(courseDiscipline3);
+                await _courseDisciplineRepository.CreateAsync(courseDiscipline1);
+                await _courseDisciplineRepository.CreateAsync(courseDiscipline2);
+                await _courseDisciplineRepository.CreateAsync(courseDiscipline3);
+            }
+        }
+
+        private async Task AddClassesAsync()
+        {
+            if (await _classRepository.IsClassesEmptyAsync())
+            {
+                var course1 = await _courseRepository.GetByCodeAsync("WEBTECH");
+                var course2 = await _courseRepository.GetByCodeAsync("BUSTECH");
+                var course3 = await _courseRepository.GetByCodeAsync("TECLEAD");
+
+                Class clas1 = new Class
+                {
+                    Code = "TCD003",
+                    Name = "Technological Course Day",
+                    CourseId = course1.Id,
+                    StartDate = DateTime.Today.AddDays(-100),
+                    EndDate = DateTime.Today.AddDays(200)
+                };
+
+                Class clas2 = new Class
+                {
+                    Code = "BCD016",
+                    Name = "Business Course Day",
+                    CourseId = course2.Id,
+                    StartDate = DateTime.Today.AddDays(-50),
+                    EndDate = DateTime.Today.AddDays(150)
+                };
+
+                Class clas3 = new Class
+                {
+                    Code = "TCN067",
+                    Name = "Technological Course Night",
+                    CourseId = course3.Id,
+                    StartDate = DateTime.Today.AddDays(-5),
+                    EndDate = DateTime.Today.AddDays(295)
+                };
+
+                await _classRepository.CreateAsync(clas1);
+                await _classRepository.CreateAsync(clas2);
+                await _classRepository.CreateAsync(clas3);
             }
         }
     }

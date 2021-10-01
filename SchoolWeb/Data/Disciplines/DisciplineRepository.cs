@@ -5,11 +5,11 @@ using SchoolWeb.Data.Entities;
 
 namespace SchoolWeb.Data.Disciplines
 {
-    public class DisciplinesRepository : GenericRepository<Discipline>, IDisciplinesRepository
+    public class DisciplineRepository : GenericRepository<Discipline>, IDisciplineRepository
     {
         private readonly DataContext _context;
 
-        public DisciplinesRepository(DataContext context)
+        public DisciplineRepository(DataContext context)
             : base(context)
         {
             _context = context;

@@ -3,7 +3,7 @@ using SchoolWeb.Data.Entities;
 
 namespace SchoolWeb.Data.Disciplines
 {
-    public interface IDisciplinesRepository : IGenericRepository<Discipline>
+    public interface IDisciplineRepository : IGenericRepository<Discipline>
     {
         Task<bool> IsDisciplinesEmptyAsync();
 

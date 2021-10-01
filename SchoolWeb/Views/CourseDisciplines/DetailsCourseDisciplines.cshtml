@@ -1,13 +1,13 @@
 ﻿@model SchoolWeb.Models.CourseDisciplines.CourseDisciplinesViewModel
 @{
-    ViewData["Title"] = "Course Details";
+    ViewData["Title"] = "Course Disciplines";
 }
 
 <link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
 
 <br>
 <br>
-<h3 class="text-center">Course Details</h3>
+<h3 class="text-center">Course Disciplines</h3>
 <br>
 <br>
 <div class="row">
@@ -39,7 +39,7 @@
                             @foreach (var item in Model.Disciplines)
                             {
                                 <tr>
-                                    <td class="align-middle">
+                                    <td class="align-middle font-weight-bold">
                                         @Html.DisplayFor(modelItem => item.Code)
                                     </td>
                                     <td class="align-middle">

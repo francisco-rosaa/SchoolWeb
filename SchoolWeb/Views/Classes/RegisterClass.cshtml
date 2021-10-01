@@ -1,0 +1,87 @@
+﻿@model SchoolWeb.Models.Classes.RegisterClassViewModel
+@{
+    ViewData["Title"] = "New Class";
+}
+
+<br>
+<br>
+<h3 class="text-center">New Class</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="post">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label asp-for="Code">Code</label>
+                    <input asp-for="Code" class="form-control bg-light" />
+                    <span asp-validation-for="Code" class="text-danger small"></span>
+                </div>
+                <div class="form-group col-md-9">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control bg-light" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseId" class="control-label"></label>
+                <select asp-for="CourseId" asp-items="Model.Courses" class="form-control"></select>
+                <span asp-validation-for="CourseId" class="text-danger small"></span>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <div class="input-group date" data-provide="datepicker">
+                        <input type="text" asp-for="StartDate" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="StartDate" class="text-danger small"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="EndDate" class="control-label"></label>
+                    <div class="input-group date" data-provide="datepicker">
+                        <input type="text" asp-for="EndDate" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="EndDate" class="text-danger small"></span>
+                </div>
+            </div>
+            <br>
+            <div class="form-group text-center">
+                <input type="submit" value="Save" class="btn btn-secondary" />
+            </div>
+            <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
+        </form>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-controller="Classes" asp-action="StaffIndexClasses" class="nav-link text-dark">Back</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="text-danger text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        if (document.getElementById("StartDate").value === "01/01/0001 00:00:00") {
+            document.getElementById("StartDate").value = "";
+        }
+        if (document.getElementById("EndDate").value === "01/01/0001 00:00:00") {
+            document.getElementById("EndDate").value = "";
+        }
+        $('.date').datepicker({
+            format: 'dd/mm/yyyy',
+            orientation: "bottom",
+            autoclose: true
+        });
+    </script>
+}

@@ -1,15 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Entities;
 
 namespace SchoolWeb.Data.Courses
 {
-    public class CoursesRepository : GenericRepository<Course>, ICoursesRepository
+    public class CourseRepository : GenericRepository<Course>, ICourseRepository
     {
         private readonly DataContext _context;
 
-        public CoursesRepository(DataContext context)
+        public CourseRepository(DataContext context)
             : base(context)
         {
             _context = context;
@@ -37,6 +39,23 @@ namespace SchoolWeb.Data.Courses
         public async Task<Course> GetByCodeAsync(string code)
         {
             return await _context.Courses.Where(x => x.Code == code).FirstOrDefaultAsync();
+        }
+
+        public IEnumerable<SelectListItem> GetComboCourses()
+        {
+            var list = _context.Courses.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select course...)",
+                Value = "0"
+            });
+
+            return list;
         }
     }
 }

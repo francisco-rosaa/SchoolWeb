@@ -5,7 +5,7 @@ using SchoolWeb.Models.CourseDisciplines;
 
 namespace SchoolWeb.Data.CourseDisciplines
 {
-    public interface ICourseDisciplinesRepository : IGenericRepository<CourseDiscipline>
+    public interface ICourseDisciplineRepository : IGenericRepository<CourseDiscipline>
     {
         Task<bool> IsCourseDisciplinesEmptyAsync();
 

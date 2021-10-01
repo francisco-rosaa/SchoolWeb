@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Classes;
 using SchoolWeb.Models.Courses;
 using SchoolWeb.Models.Disciplines;
 
@@ -14,5 +15,11 @@ namespace SchoolWeb.Helpers.Converters
         DisciplinesViewModel DisciplineToDisciplinesViewModel(Discipline discipline);
 
         IQueryable<DisciplinesViewModel> DisciplinesToDisciplinesViewModels(IQueryable<Discipline> disciplines);
+
+        ClassesViewModel ClassToClassesViewModel(Class clas);
+
+        IQueryable<ClassesViewModel> ClassesToClassesViewModels(IQueryable<Class> classes);
+
+        RegisterClassViewModel ClassToRegisterClassViewModel(Class clas);
     }
 }

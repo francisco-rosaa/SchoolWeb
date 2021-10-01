@@ -13,18 +13,18 @@ namespace SchoolWeb.Controllers
 {
     public class DisciplinesController : Controller
     {
-        private readonly IDisciplinesRepository _disciplinesRepository;
+        private readonly IDisciplineRepository _disciplineRepository;
         private readonly IUserHelper _userHelper;
         private readonly IConverterHelper _converterHelper;
 
         public DisciplinesController
             (
-                IDisciplinesRepository disciplinesRepository,
+                IDisciplineRepository disciplineRepository,
                 IUserHelper userHelper,
                 IConverterHelper converterHelper
             )
         {
-            _disciplinesRepository = disciplinesRepository;
+            _disciplineRepository = disciplineRepository;
             _userHelper = userHelper;
             _converterHelper = converterHelper;
         }
@@ -40,7 +40,7 @@ namespace SchoolWeb.Controllers
 
             var models = Enumerable.Empty<DisciplinesViewModel>();
 
-            var disciplines = _disciplinesRepository.GetAll();
+            var disciplines = _disciplineRepository.GetAll();
 
             if (disciplines.Any())
             {
@@ -69,7 +69,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isCodeUsed = await _disciplinesRepository.IsCodeInUseOnRegisterAsync(model.Code);
+                var isCodeUsed = await _disciplineRepository.IsCodeInUseOnRegisterAsync(model.Code);
 
                 if (isCodeUsed)
                 {
@@ -87,7 +87,7 @@ namespace SchoolWeb.Controllers
 
                 try
                 {
-                    await _disciplinesRepository.CreateAsync(discipline);
+                    await _disciplineRepository.CreateAsync(discipline);
 
                     string message = "Discipline added successfully";
                     return RedirectToAction("AdminIndexDisciplines", "Disciplines", new { message });
@@ -112,7 +112,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("AdminIndexDisciplines", "Disciplines");
             }
 
-            var discipline = await _disciplinesRepository.GetByIdAsync(Id);
+            var discipline = await _disciplineRepository.GetByIdAsync(Id);
 
             if (discipline == null)
             {
@@ -134,7 +134,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isCodeInUse = await _disciplinesRepository.IsCodeInUseOnEditAsync(model.Id, model.Code);
+                var isCodeInUse = await _disciplineRepository.IsCodeInUseOnEditAsync(model.Id, model.Code);
 
                 if (isCodeInUse)
                 {
@@ -142,7 +142,7 @@ namespace SchoolWeb.Controllers
                     return View(model);
                 }
 
-                var discipline = await _disciplinesRepository.GetByIdAsync(model.Id);
+                var discipline = await _disciplineRepository.GetByIdAsync(model.Id);
 
                 if (discipline != null)
                 {
@@ -153,7 +153,7 @@ namespace SchoolWeb.Controllers
 
                     try
                     {
-                        await _disciplinesRepository.UpdateAsync(discipline);
+                        await _disciplineRepository.UpdateAsync(discipline);
 
                         ViewBag.Message = "Discipline saved successfully";
                         return View(model);
@@ -185,7 +185,7 @@ namespace SchoolWeb.Controllers
                 return View("Error");
             }
 
-            var discipline = await _disciplinesRepository.GetByIdAsync(Id);
+            var discipline = await _disciplineRepository.GetByIdAsync(Id);
 
             if (discipline == null)
             {
@@ -198,7 +198,7 @@ namespace SchoolWeb.Controllers
 
             try
             {
-                await _disciplinesRepository.DeleteAsync(discipline);
+                await _disciplineRepository.DeleteAsync(discipline);
                 message = "Discipline deleted successfully";
             }
             catch (DbUpdateException ex)

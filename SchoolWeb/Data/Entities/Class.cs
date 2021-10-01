@@ -23,6 +23,7 @@ namespace SchoolWeb.Data.Entities
 
         [Display(Name = "Course")]
         [Required(ErrorMessage = "{0} is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Select Course")]
         public int CourseId { get; set; }
 
         public Course Course { get; set; }
