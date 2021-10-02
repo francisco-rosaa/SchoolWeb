@@ -10,5 +10,7 @@ namespace SchoolWeb.Data.Classes
         Task<bool> IsCodeInUseOnRegisterAsync(string code);
 
         Task<bool> IsCodeInUseOnEditAsync(int idClass, string code);
+
+        Task<Class> GetByCodeAsync(string code);
     }
 }

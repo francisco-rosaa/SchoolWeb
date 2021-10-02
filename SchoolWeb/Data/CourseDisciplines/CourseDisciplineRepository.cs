@@ -52,13 +52,8 @@ namespace SchoolWeb.Data.CourseDisciplines
                 disciplinesSelectable =
                     (
                         from disciplines in _context.Disciplines
-                        join courseDisciplines in _context.CourseDisciplines
-                        on disciplines.Id equals courseDisciplines.DisciplineId
-                        into matchedRegisters
-                        from matched in matchedRegisters.DefaultIfEmpty()
                         select disciplines
                     )
-                    .Distinct()
                     .Select(x => new DisciplineSelectable()
                     {
                         Id = x.Id,

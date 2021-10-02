@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Classes;
+using SchoolWeb.Data.ClassStudents;
 using SchoolWeb.Data.CourseDisciplines;
 using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Disciplines;
@@ -23,6 +24,7 @@ namespace SchoolWeb.Data
         private readonly IDisciplineRepository _disciplineRepository;
         private readonly ICourseDisciplineRepository _courseDisciplineRepository;
         private readonly IClassRepository _classRepository;
+        private readonly IClassStudentRepository _classStudentRepository;
 
         public SeedDb
             (
@@ -34,7 +36,8 @@ namespace SchoolWeb.Data
                 ICourseRepository courseRepository,
                 IDisciplineRepository disciplineRepository,
                 ICourseDisciplineRepository courseDisciplinesRepository,
-                IClassRepository classRepository
+                IClassRepository classRepository,
+                IClassStudentRepository classStudentRepository
             )
         {
             _context = context;
@@ -46,6 +49,7 @@ namespace SchoolWeb.Data
             _disciplineRepository = disciplineRepository;
             _courseDisciplineRepository = courseDisciplinesRepository;
             _classRepository = classRepository;
+            _classStudentRepository = classStudentRepository;
         }
 
         public async Task SeedAsync()
@@ -64,6 +68,7 @@ namespace SchoolWeb.Data
             await AddDisciplinesAsync();
             await AddCourseDisciplinesAsync();
             await AddClassesAsync();
+            await AddClassStudentsAsync();
         }
 
         private async Task AddRolesAsync()
@@ -404,27 +409,38 @@ namespace SchoolWeb.Data
                 var discicline2 = await _disciplineRepository.GetByCodeAsync("FRNTEND");
                 var discicline3 = await _disciplineRepository.GetByCodeAsync("DATASEC");
 
-                CourseDiscipline courseDiscipline1 = new CourseDiscipline
+                if (course1 != null && discicline1 != null)
                 {
-                    CourseId = course1.Id,
-                    DisciplineId = discicline1.Id
-                };
+                    CourseDiscipline courseDiscipline1 = new CourseDiscipline
+                    {
+                        CourseId = course1.Id,
+                        DisciplineId = discicline1.Id
+                    };
 
-                CourseDiscipline courseDiscipline2 = new CourseDiscipline
+                    await _courseDisciplineRepository.CreateAsync(courseDiscipline1);
+                }
+
+                if (course1 != null && discicline2 != null)
                 {
-                    CourseId = course1.Id,
-                    DisciplineId = discicline2.Id
-                };
+                    CourseDiscipline courseDiscipline2 = new CourseDiscipline
+                    {
+                        CourseId = course1.Id,
+                        DisciplineId = discicline2.Id
+                    };
 
-                CourseDiscipline courseDiscipline3 = new CourseDiscipline
+                    await _courseDisciplineRepository.CreateAsync(courseDiscipline2);
+                }
+
+                if (course2 != null && discicline3 != null)
                 {
-                    CourseId = course2.Id,
-                    DisciplineId = discicline3.Id
-                };
+                    CourseDiscipline courseDiscipline3 = new CourseDiscipline
+                    {
+                        CourseId = course2.Id,
+                        DisciplineId = discicline3.Id
+                    };
 
-                await _courseDisciplineRepository.CreateAsync(courseDiscipline1);
-                await _courseDisciplineRepository.CreateAsync(courseDiscipline2);
-                await _courseDisciplineRepository.CreateAsync(courseDiscipline3);
+                    await _courseDisciplineRepository.CreateAsync(courseDiscipline3);
+                }
             }
         }
 
@@ -436,36 +452,93 @@ namespace SchoolWeb.Data
                 var course2 = await _courseRepository.GetByCodeAsync("BUSTECH");
                 var course3 = await _courseRepository.GetByCodeAsync("TECLEAD");
 
-                Class clas1 = new Class
+                if (course1 != null)
                 {
-                    Code = "TCD003",
-                    Name = "Technological Course Day",
-                    CourseId = course1.Id,
-                    StartDate = DateTime.Today.AddDays(-100),
-                    EndDate = DateTime.Today.AddDays(200)
-                };
+                    Class clas1 = new Class
+                    {
+                        Code = "TCD003",
+                        Name = "Technological Course Day",
+                        CourseId = course1.Id,
+                        StartDate = DateTime.Today.AddDays(-100),
+                        EndDate = DateTime.Today.AddDays(200)
+                    };
 
-                Class clas2 = new Class
+                    await _classRepository.CreateAsync(clas1);
+                }
+
+                if (course2 != null)
                 {
-                    Code = "BCD016",
-                    Name = "Business Course Day",
-                    CourseId = course2.Id,
-                    StartDate = DateTime.Today.AddDays(-50),
-                    EndDate = DateTime.Today.AddDays(150)
-                };
+                    Class clas2 = new Class
+                    {
+                        Code = "BCD016",
+                        Name = "Business Course Day",
+                        CourseId = course2.Id,
+                        StartDate = DateTime.Today.AddDays(-50),
+                        EndDate = DateTime.Today.AddDays(150)
+                    };
 
-                Class clas3 = new Class
+                    await _classRepository.CreateAsync(clas2);
+                }
+
+                if (course3 != null)
                 {
-                    Code = "TCN067",
-                    Name = "Technological Course Night",
-                    CourseId = course3.Id,
-                    StartDate = DateTime.Today.AddDays(-5),
-                    EndDate = DateTime.Today.AddDays(295)
-                };
+                    Class clas3 = new Class
+                    {
+                        Code = "TCN067",
+                        Name = "Technological Course Night",
+                        CourseId = course3.Id,
+                        StartDate = DateTime.Today.AddDays(-5),
+                        EndDate = DateTime.Today.AddDays(295)
+                    };
 
-                await _classRepository.CreateAsync(clas1);
-                await _classRepository.CreateAsync(clas2);
-                await _classRepository.CreateAsync(clas3);
+                    await _classRepository.CreateAsync(clas3);
+                }
+            }
+        }
+
+        private async Task AddClassStudentsAsync()
+        {
+            if (await _classStudentRepository.IsClassStudentsEmptyAsync())
+            {
+                var class1 = await _classRepository.GetByCodeAsync("TCD003");
+                var class2 = await _classRepository.GetByCodeAsync("BCD016");
+
+                var userStudent1 = await _userHelper.GetUserByEmailAsync("student1@gmail.com");
+                var userStudent2 = await _userHelper.GetUserByEmailAsync("student2@gmail.com");
+                var userStudent3 = await _userHelper.GetUserByEmailAsync("student3@gmail.com");
+
+                if (class1 != null && userStudent1 != null)
+                {
+                    ClassStudent classStudent1 = new ClassStudent
+                    {
+                        ClassId = class1.Id,
+                        UserId = userStudent1.Id
+                    };
+
+                    await _classStudentRepository.CreateAsync(classStudent1);
+                }
+
+                if (class1 != null && userStudent2 != null)
+                {
+                    ClassStudent classStudent2 = new ClassStudent
+                    {
+                        ClassId = class1.Id,
+                        UserId = userStudent2.Id
+                    };
+
+                    await _classStudentRepository.CreateAsync(classStudent2);
+                }
+
+                if (class2 != null && userStudent3 != null)
+                {
+                    ClassStudent classStudent3 = new ClassStudent
+                    {
+                        ClassId = class2.Id,
+                        UserId = userStudent3.Id
+                    };
+
+                    await _classStudentRepository.CreateAsync(classStudent3);
+                }
             }
         }
     }

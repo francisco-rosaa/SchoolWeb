@@ -33,5 +33,10 @@ namespace SchoolWeb.Data.Classes
 
             return discipline != null ? true : false;
         }
+
+        public async Task<Class> GetByCodeAsync(string code)
+        {
+            return await _context.Classes.Where(x => x.Code == code).FirstOrDefaultAsync();
+        }
     }
 }

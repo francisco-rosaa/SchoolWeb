@@ -1,0 +1,119 @@
+﻿@model SchoolWeb.Models.ClassStudents.EditClassStudentsSelectableViewModel
+@{
+    ViewData["Title"] = "Edit Class Students";
+}
+
+<link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<br>
+<br>
+<h3 class="text-center">Edit Class Students</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <input type="hidden" asp-for="ClassId" />
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <input asp-for="ClassName" class="form-control font-weight-bold bg-secondary" style="height: 3rem; color: white;" disabled="disabled" />
+                    <br>
+                    <table class="table table-hover table-responsive table-striped" id="EditClassStudents">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StudentsSelectable.FirstOrDefault().ProfilePicturePath)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StudentsSelectable.FirstOrDefault().FullName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StudentsSelectable.FirstOrDefault().Age)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StudentsSelectable.FirstOrDefault().City)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StudentsSelectable.FirstOrDefault().PhoneNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StudentsSelectable.FirstOrDefault().Email)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.StudentsSelectable.FirstOrDefault().IsSelected)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                @for (int i = 0; i < Model.StudentsSelectable.Count(); i++)
+                                {
+                                    <tr>
+                                        <td class="align-middle font-weight-bold">
+                                            <input type="hidden" asp-for="@Model.StudentsSelectable[i].UserId" />
+                                            <img src="@Url.Content(@Model.StudentsSelectable[i].ProfilePicturePath)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => @Model.StudentsSelectable[i].FullName)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.StudentsSelectable[i].Age)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.StudentsSelectable[i].City)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.StudentsSelectable[i].PhoneNumber)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.StudentsSelectable[i].Email)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.CheckBoxFor(modelItem => Model.StudentsSelectable[i].IsSelected)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="form-group text-center">
+                <input type="submit" value="Update" class="btn btn-secondary" />
+            </div>
+        </form>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-action="StaffIndexClassStudents" asp-route-id="@Model.ClassId" class="nav-link text-dark">Back</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="text-success text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
+
+@section Scripts{
+
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#EditClassStudents').DataTable({
+                responsive: true,
+                columnDefs: [{
+                    "targets": [0, 6],
+                    "orderable": false,
+                    "searchable": false
+                }],
+                order: [[1, 'asc']]
+            });
+        });
+    </script>
+}
+
