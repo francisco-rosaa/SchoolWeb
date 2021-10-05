@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolWeb.Data.Entities;
 
 namespace SchoolWeb.Data.Disciplines
@@ -12,5 +14,7 @@ namespace SchoolWeb.Data.Disciplines
         Task<bool> IsCodeInUseOnEditAsync(int idDiscipline, string code);
 
         Task<Discipline> GetByCodeAsync(string code);
+
+        Task<IEnumerable<SelectListItem>> GetComboDisciplinesInCourse(int courseId);
     }
 }

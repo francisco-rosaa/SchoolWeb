@@ -157,7 +157,7 @@ namespace SchoolWeb.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -175,7 +175,7 @@ namespace SchoolWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("DisciplineId");
 
@@ -356,7 +356,7 @@ namespace SchoolWeb.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -374,7 +374,7 @@ namespace SchoolWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("DisciplineId");
 
@@ -624,9 +624,9 @@ namespace SchoolWeb.Migrations
 
             modelBuilder.Entity("SchoolWeb.Data.Entities.Absence", b =>
                 {
-                    b.HasOne("SchoolWeb.Data.Entities.Course", "Course")
+                    b.HasOne("SchoolWeb.Data.Entities.Class", "Class")
                         .WithMany()
-                        .HasForeignKey("CourseId")
+                        .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -642,7 +642,7 @@ namespace SchoolWeb.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Course");
+                    b.Navigation("Class");
 
                     b.Navigation("Discipline");
 
@@ -700,9 +700,9 @@ namespace SchoolWeb.Migrations
 
             modelBuilder.Entity("SchoolWeb.Data.Entities.Evaluation", b =>
                 {
-                    b.HasOne("SchoolWeb.Data.Entities.Course", "Course")
+                    b.HasOne("SchoolWeb.Data.Entities.Class", "Class")
                         .WithMany()
-                        .HasForeignKey("CourseId")
+                        .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -718,7 +718,7 @@ namespace SchoolWeb.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Course");
+                    b.Navigation("Class");
 
                     b.Navigation("Discipline");
 

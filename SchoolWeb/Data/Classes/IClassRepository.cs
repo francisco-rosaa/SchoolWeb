@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolWeb.Data.Entities;
 
 namespace SchoolWeb.Data.Classes
@@ -12,5 +14,7 @@ namespace SchoolWeb.Data.Classes
         Task<bool> IsCodeInUseOnEditAsync(int idClass, string code);
 
         Task<Class> GetByCodeAsync(string code);
+
+        Task<IEnumerable<SelectListItem>> GetComboClasses();
     }
 }

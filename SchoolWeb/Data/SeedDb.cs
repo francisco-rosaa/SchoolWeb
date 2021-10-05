@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SchoolWeb.Data.Absences;
 using SchoolWeb.Data.Classes;
 using SchoolWeb.Data.ClassStudents;
 using SchoolWeb.Data.CourseDisciplines;
@@ -25,6 +26,7 @@ namespace SchoolWeb.Data
         private readonly ICourseDisciplineRepository _courseDisciplineRepository;
         private readonly IClassRepository _classRepository;
         private readonly IClassStudentRepository _classStudentRepository;
+        private readonly IAbsenceRepository _absenceRepository;
 
         public SeedDb
             (
@@ -37,7 +39,8 @@ namespace SchoolWeb.Data
                 IDisciplineRepository disciplineRepository,
                 ICourseDisciplineRepository courseDisciplinesRepository,
                 IClassRepository classRepository,
-                IClassStudentRepository classStudentRepository
+                IClassStudentRepository classStudentRepository,
+                IAbsenceRepository absenceRepository
             )
         {
             _context = context;
@@ -50,6 +53,7 @@ namespace SchoolWeb.Data
             _courseDisciplineRepository = courseDisciplinesRepository;
             _classRepository = classRepository;
             _classStudentRepository = classStudentRepository;
+            _absenceRepository = absenceRepository;
         }
 
         public async Task SeedAsync()
@@ -69,6 +73,7 @@ namespace SchoolWeb.Data
             await AddCourseDisciplinesAsync();
             await AddClassesAsync();
             await AddClassStudentsAsync();
+            await AddAbsencesAsync();
         }
 
         private async Task AddRolesAsync()
@@ -538,6 +543,41 @@ namespace SchoolWeb.Data
                     };
 
                     await _classStudentRepository.CreateAsync(classStudent3);
+                }
+            }
+        }
+
+        private async Task AddAbsencesAsync()
+        {
+            if (await _absenceRepository.IsAbsencesEmptyAsync())
+            {
+                var userStudent1 = await _userHelper.GetUserByEmailAsync("student1@gmail.com");
+                var class1 = await _classRepository.GetByCodeAsync("TCD003");
+                var discicline1 = await _disciplineRepository.GetByCodeAsync("NETMVCC");
+
+                if (userStudent1 != null && class1 != null && discicline1 != null)
+                {
+                    Absence absence1 = new Absence
+                    {
+                        UserId = userStudent1.Id,
+                        ClassId = class1.Id,
+                        DisciplineId = discicline1.Id,
+                        Date = DateTime.Today.AddDays(-3),
+                        Duration = 4
+                    };
+
+                    await _absenceRepository.CreateAsync(absence1);
+
+                    Absence absence2 = new Absence
+                    {
+                        UserId = userStudent1.Id,
+                        ClassId = class1.Id,
+                        DisciplineId = discicline1.Id,
+                        Date = DateTime.Today.AddDays(-1),
+                        Duration = 2
+                    };
+
+                    await _absenceRepository.CreateAsync(absence2);
                 }
             }
         }

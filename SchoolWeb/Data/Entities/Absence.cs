@@ -16,11 +16,11 @@ namespace SchoolWeb.Data.Entities
         public User User { get; set; }
 
 
-        [Display(Name = "Course")]
+        [Display(Name = "Class")]
         [Required(ErrorMessage = "{0} is required")]
-        public int CourseId { get; set; }
+        public int ClassId { get; set; }
 
-        public Course Course { get; set; }
+        public Class Class { get; set; }
 
 
         [Display(Name = "Discipline")]

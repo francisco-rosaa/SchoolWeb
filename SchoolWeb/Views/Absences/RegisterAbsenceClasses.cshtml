@@ -1,0 +1,31 @@
+﻿@model SchoolWeb.Models.Absences.AbsenceClassesViewModel
+@{
+    ViewData["Title"] = "New Absence";
+}
+
+<br>
+<br>
+<h3 class="text-center">New Absence</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="ClassId" class="control-label"></label>
+                <select asp-for="ClassId" asp-items="Model.Classes" class="form-control bg-light"></select>
+                <span asp-validation-for="ClassId" class="text-danger small"></span>
+            </div>
+            <br>
+            <div class="form-group text-center">
+                <input type="submit" value="Next" class="btn btn-secondary" />
+            </div>
+            <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
+        </form>
+    </div>
+</div>
+<br>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

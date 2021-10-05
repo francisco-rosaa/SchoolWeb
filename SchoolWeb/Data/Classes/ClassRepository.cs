@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Entities;
 
@@ -37,6 +39,30 @@ namespace SchoolWeb.Data.Classes
         public async Task<Class> GetByCodeAsync(string code)
         {
             return await _context.Classes.Where(x => x.Code == code).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetComboClasses()
+        {
+            var list = new List<SelectListItem>();
+
+            await Task.Run(() =>
+            {
+                list = _context.Classes
+                    .Select(x => new SelectListItem
+                    {
+                        Text = $"{x.Code}  |  {x.Name}",
+                        Value = x.Id.ToString()
+                    })
+                    .ToList();
+
+                list.Insert(0, new SelectListItem
+                {
+                    Text = "(Select class...)",
+                    Value = "0"
+                });
+            });
+
+            return list;
         }
     }
 }

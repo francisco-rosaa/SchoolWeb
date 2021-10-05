@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Absences;
 using SchoolWeb.Models.Classes;
 using SchoolWeb.Models.Courses;
 using SchoolWeb.Models.Disciplines;
@@ -103,6 +104,18 @@ namespace SchoolWeb.Helpers.Converters
                 Courses = _courseRepository.GetComboCourses(),
                 StartDate = clas.StartDate,
                 EndDate = clas.EndDate
+            };
+        }
+
+        public AbsenceDisciplinesViewModel AbsenceStudentsToDisciplinesViewModel(AbsenceStudentsViewModel model)
+        {
+            return new AbsenceDisciplinesViewModel
+            {
+                ClassId = model.ClassId,
+                ClassName = model.ClassName,
+                CourseId = model.CourseId,
+                CourseName = model.CourseName,
+                DisciplineId = model.DisciplineId
             };
         }
     }

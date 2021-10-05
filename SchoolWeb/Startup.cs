@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SchoolWeb.Data;
+using SchoolWeb.Data.Absences;
 using SchoolWeb.Data.Classes;
 using SchoolWeb.Data.ClassStudents;
 using SchoolWeb.Data.CourseDisciplines;
@@ -61,7 +62,7 @@ namespace SchoolWeb
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
-            
+
             services.AddScoped<IGenderRepository, GenderRepository>();
             services.AddScoped<IQualificationRepository, QualificationRepository>();
             services.AddScoped<IReportRepository, ReportRepository>();
@@ -71,6 +72,7 @@ namespace SchoolWeb
             services.AddScoped<ICourseDisciplineRepository, CourseDisciplineRepository>();
             services.AddScoped<IClassRepository, ClassRepository>();
             services.AddScoped<IClassStudentRepository, ClassStudentRepository>();
+            services.AddScoped<IAbsenceRepository, AbsenceRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {

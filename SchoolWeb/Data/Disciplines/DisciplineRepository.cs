@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Entities;
 
@@ -37,6 +39,32 @@ namespace SchoolWeb.Data.Disciplines
         public async Task<Discipline> GetByCodeAsync(string code)
         {
             return await _context.Disciplines.Where(x => x.Code == code).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetComboDisciplinesInCourse(int courseId)
+        {
+            var list = new List<SelectListItem>();
+
+            await Task.Run(() =>
+            {
+                list = _context.CourseDisciplines
+                    .Include(x => x.Discipline)
+                    .Where(x => x.CourseId == courseId)
+                    .Select(x => new SelectListItem
+                    {
+                        Text = $"{x.Discipline.Code}  |  {x.Discipline.Name}",
+                        Value = x.Id.ToString()
+                    })
+                    .ToList();
+
+                list.Insert(0, new SelectListItem
+                {
+                    Text = "(Select discipline...)",
+                    Value = "0"
+                });
+            });
+
+            return list;
         }
     }
 }

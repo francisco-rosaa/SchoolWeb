@@ -218,7 +218,7 @@ namespace SchoolWeb.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    ClassId = table.Column<int>(type: "int", nullable: false),
                     DisciplineId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false)
@@ -233,9 +233,9 @@ namespace SchoolWeb.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Absences_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
+                        name: "FK_Absences_Classes_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Classes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -364,7 +364,7 @@ namespace SchoolWeb.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    ClassId = table.Column<int>(type: "int", nullable: false),
                     DisciplineId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Grade = table.Column<int>(type: "int", nullable: false)
@@ -379,9 +379,9 @@ namespace SchoolWeb.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Evaluations_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
+                        name: "FK_Evaluations_Classes_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Classes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -417,9 +417,9 @@ namespace SchoolWeb.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Absences_CourseId",
+                name: "IX_Absences_ClassId",
                 table: "Absences",
-                column: "CourseId");
+                column: "ClassId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Absences_DisciplineId",
@@ -524,9 +524,9 @@ namespace SchoolWeb.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Evaluations_CourseId",
+                name: "IX_Evaluations_ClassId",
                 table: "Evaluations",
-                column: "CourseId");
+                column: "ClassId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Evaluations_DisciplineId",

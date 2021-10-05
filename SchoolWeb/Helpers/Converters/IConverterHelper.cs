@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Absences;
 using SchoolWeb.Models.Classes;
 using SchoolWeb.Models.Courses;
 using SchoolWeb.Models.Disciplines;
@@ -21,5 +22,7 @@ namespace SchoolWeb.Helpers.Converters
         IQueryable<ClassesViewModel> ClassesToClassesViewModels(IQueryable<Class> classes);
 
         RegisterClassViewModel ClassToRegisterClassViewModel(Class clas);
+
+        AbsenceDisciplinesViewModel AbsenceStudentsToDisciplinesViewModel(AbsenceStudentsViewModel model);
     }
 }
