@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.API.Students;
 using SchoolWeb.Models.ClassStudents;
 
 namespace SchoolWeb.Data.ClassStudents
@@ -60,7 +61,7 @@ namespace SchoolWeb.Data.ClassStudents
                     Email = user.Email,
                     ProfilePicturePath = user.ProfilePicturePath
                 }
-                ).Select(x => new ClassStudentsViewModel()
+                ).Select(x => new ClassStudentsViewModel
                 {
                     UserId = x.Id,
                     FirstName = x.FirstName,
@@ -92,7 +93,7 @@ namespace SchoolWeb.Data.ClassStudents
                         where role.Name == "Student"
                         select user
                     )
-                    .Select(x => new StudentsSelectable()
+                    .Select(x => new StudentsSelectable
                     {
                         UserId = x.Id,
                         FirstName = x.FirstName,
@@ -134,6 +135,45 @@ namespace SchoolWeb.Data.ClassStudents
             });
 
             return studentsInClass;
+        }
+
+        public async Task<IQueryable<StudentsViewModel>> GetStudentsByClassCodeAsync(string classCode)
+        {
+            var students = Enumerable.Empty<StudentsViewModel>().AsQueryable();
+
+            await Task.Run(() =>
+            {
+                students =
+                    (
+                        from user in _context.Users
+                        join userRole in _context.UserRoles
+                        on user.Id equals userRole.UserId
+                        join role in _context.Roles
+                        on userRole.RoleId equals role.Id
+                        join classStudent in _context.ClassStudents
+                        on user.Id equals classStudent.UserId
+                        join clas in _context.Classes
+                        on classStudent.ClassId equals clas.Id
+                        where role.Name == "Student" && clas.Code == classCode
+                        select user
+                    )
+                    .Select(x => new StudentsViewModel
+                    {
+                        Id = x.Id,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        Gender = _context.Genders.Where(y => y.Id == x.GenderId).FirstOrDefault().Name,
+                        Qualification = _context.Qualifications.Where(y => y.Id == x.QualificationId).FirstOrDefault().Name,
+                        CcNumber = x.CcNumber,
+                        BirthDate = x.BirthDate,
+                        Address = x.Address,
+                        City = x.City,
+                        PhoneNumber = x.PhoneNumber,
+                        Email = x.Email
+                    });
+            });
+
+            return students;
         }
     }
 }

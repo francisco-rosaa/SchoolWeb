@@ -246,24 +246,25 @@ namespace SchoolWeb.Helpers
 
             await Task.Run(() =>
             {
-                users = (
-                from user in _context.Users
-                join userRole in _context.UserRoles
-                on user.Id equals userRole.UserId
-                join role in _context.Roles
-                on userRole.RoleId equals role.Id
-                where role.Name != "Student"
-                orderby user.FirstName
-                select new
-                {
-                    Id = user.Id,
-                    ProfilePicture = user.ProfilePicturePath,
-                    FullName = user.FullName,
-                    City = user.City,
-                    Email = user.Email,
-                    Role = role.Name,
-                }
-                ).Select(x => new EditUsersViewModel()
+                users = 
+                (
+                    from user in _context.Users
+                    join userRole in _context.UserRoles
+                    on user.Id equals userRole.UserId
+                    join role in _context.Roles
+                    on userRole.RoleId equals role.Id
+                    where role.Name != "Student"
+                    orderby user.FirstName
+                    select new
+                    {
+                        Id = user.Id,
+                        ProfilePicture = user.ProfilePicturePath,
+                        FullName = user.FullName,
+                        City = user.City,
+                        Email = user.Email,
+                        Role = role.Name,
+                    }
+                ).Select(x => new EditUsersViewModel
                 {
                     Id = x.Id,
                     ProfilePicture = x.ProfilePicture,
@@ -283,27 +284,28 @@ namespace SchoolWeb.Helpers
 
             await Task.Run(() =>
             {
-                students = (
-                from user in _context.Users
-                join userRole in _context.UserRoles
-                on user.Id equals userRole.UserId
-                join role in _context.Roles
-                on userRole.RoleId equals role.Id
-                where role.Name == "Student"
-                join qualification in _context.Qualifications
-                on user.QualificationId equals qualification.Id
-                orderby user.FirstName
-                select new
-                {
-                    Id = user.Id,
-                    ProfilePicture = user.ProfilePicturePath,
-                    FullName = user.FullName,
-                    BirthDate = user.BirthDate,
-                    Qualification = qualification.Name,
-                    City = user.City,
-                    Email = user.Email
-                }
-                ).Select(x => new EditStudentsViewModel()
+                students =
+                (
+                    from user in _context.Users
+                    join userRole in _context.UserRoles
+                    on user.Id equals userRole.UserId
+                    join role in _context.Roles
+                    on userRole.RoleId equals role.Id
+                    where role.Name == "Student"
+                    join qualification in _context.Qualifications
+                    on user.QualificationId equals qualification.Id
+                    orderby user.FirstName
+                    select new
+                    {
+                        Id = user.Id,
+                        ProfilePicture = user.ProfilePicturePath,
+                        FullName = user.FullName,
+                        BirthDate = user.BirthDate,
+                        Qualification = qualification.Name,
+                        City = user.City,
+                        Email = user.Email
+                    }
+                ).Select(x => new EditStudentsViewModel
                 {
                     Id = x.Id,
                     ProfilePicture = x.ProfilePicture,

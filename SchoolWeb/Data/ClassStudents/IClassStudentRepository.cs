@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.API.Students;
 using SchoolWeb.Models.ClassStudents;
 
 namespace SchoolWeb.Data.ClassStudents
@@ -19,5 +20,7 @@ namespace SchoolWeb.Data.ClassStudents
         Task<ClassStudent> GetClassStudentAsync(int classId, string studentId);
 
         Task<int> GetClassStudentsTotalAsync(int classId);
+
+        Task<IQueryable<StudentsViewModel>> GetStudentsByClassCodeAsync(string classCode);
     }
 }

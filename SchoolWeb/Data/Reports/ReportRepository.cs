@@ -29,7 +29,7 @@ namespace SchoolWeb.Data.Entities
                 reports = _context.Reports
                 .Include(x => x.User)
                 .OrderBy(x => x.Date)
-                .Select(x => new ReportsViewModel()
+                .Select(x => new ReportsViewModel
                 {
                     Id = x.Id,
                     UserId = x.UserId,
@@ -57,7 +57,7 @@ namespace SchoolWeb.Data.Entities
                 return null;
             }
 
-            return new ReportsViewModel()
+            return new ReportsViewModel
             {
                 Id = report.Id,
                 UserId = report.UserId,
@@ -80,7 +80,7 @@ namespace SchoolWeb.Data.Entities
                 .Include(x => x.User)
                 .Where(x => x.UserId == userId)
                 .OrderBy(x => x.Date)
-                .Select(x => new ReportsViewModel()
+                .Select(x => new ReportsViewModel
                 {
                     Id = x.Id,
                     UserId = x.UserId,

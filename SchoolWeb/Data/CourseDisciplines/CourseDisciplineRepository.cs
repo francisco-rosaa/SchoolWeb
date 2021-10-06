@@ -30,7 +30,7 @@ namespace SchoolWeb.Data.CourseDisciplines
                 disciplines = _context.CourseDisciplines
                 .Include(x => x.Discipline)
                 .Where(x => x.CourseId == courseId)
-                .Select(x => new Discipline()
+                .Select(x => new Discipline
                 {
                     Id = x.Discipline.Id,
                     Code = x.Discipline.Code,
@@ -54,7 +54,7 @@ namespace SchoolWeb.Data.CourseDisciplines
                         from disciplines in _context.Disciplines
                         select disciplines
                     )
-                    .Select(x => new DisciplineSelectable()
+                    .Select(x => new DisciplineSelectable
                     {
                         Id = x.Id,
                         Code = x.Code,

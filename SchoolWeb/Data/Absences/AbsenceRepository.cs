@@ -32,34 +32,35 @@ namespace SchoolWeb.Data.Absences
 
             await Task.Run(() =>
             {
-                students = (
-                from user in _context.Users
-                join userRole in _context.UserRoles
-                on user.Id equals userRole.UserId
-                join role in _context.Roles
-                on userRole.RoleId equals role.Id
-                join classStudent in _context.ClassStudents
-                on user.Id equals classStudent.UserId
-                where role.Name == "Student" && classStudent.ClassId == classId
-                orderby user.FirstName
-                select new
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    ProfilePicturePath = user.ProfilePicturePath,
-                    HoursAbsence = (
-                        from absence in _context.Absences
-                        where absence.UserId == user.Id && absence.ClassId == classId && absence.DisciplineId == disciplineId
-                        select absence.Duration
-                        ).Sum(),
-                    HoursDiscipline = (
-                        from discipline in _context.Disciplines
-                        where discipline.Id == disciplineId
-                        select discipline.Duration
-                        ).FirstOrDefault()
-                }
-                ).Select(x => new StudentAbsence()
+                students = 
+                (
+                    from user in _context.Users
+                    join userRole in _context.UserRoles
+                    on user.Id equals userRole.UserId
+                    join role in _context.Roles
+                    on userRole.RoleId equals role.Id
+                    join classStudent in _context.ClassStudents
+                    on user.Id equals classStudent.UserId
+                    where role.Name == "Student" && classStudent.ClassId == classId
+                    orderby user.FirstName
+                    select new
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        ProfilePicturePath = user.ProfilePicturePath,
+                        HoursAbsence = (
+                            from absence in _context.Absences
+                            where absence.UserId == user.Id && absence.ClassId == classId && absence.DisciplineId == disciplineId
+                            select absence.Duration
+                            ).Sum(),
+                        HoursDiscipline = (
+                            from discipline in _context.Disciplines
+                            where discipline.Id == disciplineId
+                            select discipline.Duration
+                            ).FirstOrDefault()
+                    }
+                ).Select(x => new StudentAbsence
                 {
                     UserId = x.Id,
                     FirstName = x.FirstName,
