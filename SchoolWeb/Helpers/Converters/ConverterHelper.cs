@@ -5,6 +5,7 @@ using SchoolWeb.Models.Absences;
 using SchoolWeb.Models.Classes;
 using SchoolWeb.Models.Courses;
 using SchoolWeb.Models.Disciplines;
+using SchoolWeb.Models.Evaluations;
 
 namespace SchoolWeb.Helpers.Converters
 {
@@ -110,6 +111,18 @@ namespace SchoolWeb.Helpers.Converters
         public AbsenceDisciplinesViewModel AbsenceStudentsToDisciplinesViewModel(AbsenceStudentsViewModel model)
         {
             return new AbsenceDisciplinesViewModel
+            {
+                ClassId = model.ClassId,
+                ClassName = model.ClassName,
+                CourseId = model.CourseId,
+                CourseName = model.CourseName,
+                DisciplineId = model.DisciplineId
+            };
+        }
+
+        public EvaluationDisciplinesViewModel EvaluationStudentsToDisciplinesViewModel(EvaluationStudentsViewModel model)
+        {
+            return new EvaluationDisciplinesViewModel
             {
                 ClassId = model.ClassId,
                 ClassName = model.ClassName,

@@ -1,0 +1,116 @@
+﻿@model SchoolWeb.Models.Evaluations.EvaluationStudentsViewModel
+@{
+    ViewData["Title"] = "New Evaluation";
+}
+
+<br>
+<br>
+<h3 class="text-center">New Evaluation</h3>
+<br>
+<br>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <form method="post">
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <input type="hidden" asp-for="ClassId" />
+                    <input type="hidden" asp-for="CourseId" />
+                    <input type="hidden" asp-for="DisciplineId" />
+                    <input asp-for="ClassName" class="form-control font-weight-bold bg-secondary" style="height: 3rem; color: white;" disabled="disabled" />
+                    <input asp-for="CourseName" class="form-control" style="height: 3rem;" disabled="disabled" />
+                    <br>
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <input asp-for="DisciplineName" class="form-control font-weight-bold" style="height: 3rem;" disabled="disabled" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="input-group date" data-provide="datepicker">
+                                <input type="text" asp-for="Date" class="form-control bg-light" style="height: 3rem;" value="">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Date" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table table-hover table-responsive" id="AbsencesTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.FirstOrDefault().ProfilePicturePath)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.FirstOrDefault().FullName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.FirstOrDefault().Grade)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.FirstOrDefault().EvaluationDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.FirstOrDefault().NewGrade)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Students != null)
+                            {
+                                @for (int i = 0; i < Model.Students.Count(); i++)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <input type="hidden" asp-for="@Model.Students[i].UserId" />
+                                            <img src="@Url.Content(@Model.Students[i].ProfilePicturePath)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.Students[i].FullName)
+                                        </td>
+                                        <td class="align-middle">
+                                            <input type="hidden" asp-for="@Model.Students[i].Grade" />
+                                            @Html.DisplayFor(modelItem => Model.Students[i].Grade)
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model.Students[i].EvaluationDate)
+                                        </td>
+                                        <td class="align-middle col-md-3">
+                                            <input asp-for="@Model.Students[i].NewGrade" class="form-control bg-light" min="0" max="20" />
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <div class="form-group text-center">
+                        <input type="submit" value="Register" class="btn btn-secondary" />
+                    </div>
+                    <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
+                </div>
+            </div>
+        </form>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-controller="Evaluations" asp-action="RegisterEvaluationDisciplines" asp-route-Id="@Model.ClassId" asp-route-disciplineId="@Model.DisciplineId" class="nav-link text-dark">Back</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="text-success text-center">
+    <p>
+        @Html.Raw(ViewBag.Message)
+    </p>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $('.date').datepicker({
+            format: 'dd/mm/yyyy',
+            orientation: "bottom",
+            autoclose: true
+        });
+    </script>
+}
+

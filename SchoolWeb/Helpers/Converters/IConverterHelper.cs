@@ -4,6 +4,7 @@ using SchoolWeb.Models.Absences;
 using SchoolWeb.Models.Classes;
 using SchoolWeb.Models.Courses;
 using SchoolWeb.Models.Disciplines;
+using SchoolWeb.Models.Evaluations;
 
 namespace SchoolWeb.Helpers.Converters
 {
@@ -24,5 +25,7 @@ namespace SchoolWeb.Helpers.Converters
         RegisterClassViewModel ClassToRegisterClassViewModel(Class clas);
 
         AbsenceDisciplinesViewModel AbsenceStudentsToDisciplinesViewModel(AbsenceStudentsViewModel model);
+
+        EvaluationDisciplinesViewModel EvaluationStudentsToDisciplinesViewModel(EvaluationStudentsViewModel model);
     }
 }

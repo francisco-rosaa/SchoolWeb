@@ -10,6 +10,7 @@ using SchoolWeb.Data.CourseDisciplines;
 using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Disciplines;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Data.Evaluations;
 using SchoolWeb.Helpers;
 
 namespace SchoolWeb.Data
@@ -27,6 +28,7 @@ namespace SchoolWeb.Data
         private readonly IClassRepository _classRepository;
         private readonly IClassStudentRepository _classStudentRepository;
         private readonly IAbsenceRepository _absenceRepository;
+        private readonly IEvaluationRepository _evaluationRepository;
 
         public SeedDb
             (
@@ -40,7 +42,8 @@ namespace SchoolWeb.Data
                 ICourseDisciplineRepository courseDisciplinesRepository,
                 IClassRepository classRepository,
                 IClassStudentRepository classStudentRepository,
-                IAbsenceRepository absenceRepository
+                IAbsenceRepository absenceRepository,
+                IEvaluationRepository evaluationRepository
             )
         {
             _context = context;
@@ -54,6 +57,7 @@ namespace SchoolWeb.Data
             _classRepository = classRepository;
             _classStudentRepository = classStudentRepository;
             _absenceRepository = absenceRepository;
+            _evaluationRepository = evaluationRepository;
         }
 
         public async Task SeedAsync()
@@ -74,6 +78,7 @@ namespace SchoolWeb.Data
             await AddClassesAsync();
             await AddClassStudentsAsync();
             await AddAbsencesAsync();
+            await AddEvaluationsAsync();
         }
 
         private async Task AddRolesAsync()
@@ -578,6 +583,42 @@ namespace SchoolWeb.Data
                     };
 
                     await _absenceRepository.CreateAsync(absence2);
+                }
+            }
+        }
+
+        private async Task AddEvaluationsAsync()
+        {
+            if (await _evaluationRepository.IsEvaluationsEmptyAsync())
+            {
+                var userStudent1 = await _userHelper.GetUserByEmailAsync("student1@gmail.com");
+                var class1 = await _classRepository.GetByCodeAsync("TCD003");
+                var discicline1 = await _disciplineRepository.GetByCodeAsync("NETMVCC");
+                var discicline2 = await _disciplineRepository.GetByCodeAsync("FRNTEND");
+                
+                if (userStudent1 != null && class1 != null && discicline1 != null && discicline2 != null)
+                {
+                    Evaluation evaluation1 = new Evaluation
+                    {
+                        UserId = userStudent1.Id,
+                        ClassId = class1.Id,
+                        DisciplineId = discicline1.Id,
+                        Date = DateTime.Today.AddDays(-3),
+                        Grade = 16
+                    };
+
+                    await _evaluationRepository.CreateAsync(evaluation1);
+
+                    Evaluation evaluation2 = new Evaluation
+                    {
+                        UserId = userStudent1.Id,
+                        ClassId = class1.Id,
+                        DisciplineId = discicline2.Id,
+                        Date = DateTime.Today.AddDays(-1),
+                        Grade = 8
+                    };
+
+                    await _evaluationRepository.CreateAsync(evaluation2);
                 }
             }
         }

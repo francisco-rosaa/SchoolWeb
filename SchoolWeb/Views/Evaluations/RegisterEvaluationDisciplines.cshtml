@@ -1,0 +1,41 @@
+﻿@model SchoolWeb.Models.Evaluations.EvaluationDisciplinesViewModel
+@{
+    ViewData["Title"] = "New Evaluation";
+}
+
+<br>
+<br>
+<h3 class="text-center">New Evaluation</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="post">
+            <input type="hidden" asp-for="ClassId" />
+            <input type="hidden" asp-for="ClassName" />
+            <input type="hidden" asp-for="CourseId" />
+            <input type="hidden" asp-for="CourseName" />
+            <input asp-for="ClassName" class="form-control font-weight-bold bg-secondary" style="height: 3rem; color: white;" disabled="disabled" />
+            <input asp-for="CourseName" class="form-control" style="height: 3rem;" disabled="disabled" />
+            <br>
+            <div class="form-group">
+                <label asp-for="DisciplineId" class="control-label"></label>
+                <select asp-for="DisciplineId" asp-items="Model.Disciplines" class="form-control bg-light"></select>
+                <span asp-validation-for="DisciplineId" class="text-danger small"></span>
+            </div>
+            <br>
+            <div class="form-group text-center">
+                <input type="submit" value="Next" class="btn btn-secondary" />
+            </div>
+            <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
+        </form>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-controller="Evaluations" asp-action="RegisterEvaluationClasses" asp-route-id="@Model.ClassId" class="nav-link text-dark">Back</a>
+        </div>
+    </div>
+</div>
+<br>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

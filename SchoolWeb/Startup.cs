@@ -16,6 +16,7 @@ using SchoolWeb.Data.CourseDisciplines;
 using SchoolWeb.Data.Courses;
 using SchoolWeb.Data.Disciplines;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Data.Evaluations;
 using SchoolWeb.Helpers;
 using SchoolWeb.Helpers.Converters;
 
@@ -73,6 +74,7 @@ namespace SchoolWeb
             services.AddScoped<IClassRepository, ClassRepository>();
             services.AddScoped<IClassStudentRepository, ClassStudentRepository>();
             services.AddScoped<IAbsenceRepository, AbsenceRepository>();
+            services.AddScoped<IEvaluationRepository, EvaluationRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {

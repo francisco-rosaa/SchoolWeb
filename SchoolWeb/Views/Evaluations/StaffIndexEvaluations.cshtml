@@ -1,0 +1,89 @@
+﻿@model IList<SchoolWeb.Models.Evaluations.StudentsEvaluationIndexViewModel>
+@{
+    ViewData["Title"] = "Evaluations";
+}
+
+<link href="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<br>
+<br>
+<h3 class="text-center">Evaluations</h3>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <form method="post">
+                    <table class="table table-hover table-responsive table-striped" id="IndexEvaluationsTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstOrDefault().ProfilePicturePath)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstOrDefault().FullName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.FirstOrDefault().Courses)
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                @for (int i = 0; i < Model.Count(); i++)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <img src="@Url.Content(Model[i].ProfilePicturePath)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
+                                        </td>
+                                        <td class="align-middle">
+                                            @Html.DisplayFor(modelItem => Model[i].FullName)
+
+                                        </td>
+                                        <td class="align-middle col-md-6">
+                                            <select asp-for="@Model[i].CourseId" asp-items="@Model[i].Courses" class="form-control"></select>
+                                        </td>
+                                        <td class="align-middle">
+                                            <input type="hidden" asp-for="@Model[i].UserId" />
+                                            <input type="submit" asp-action="StaffIndexEvaluations" asp-route-userId="@Model[i].UserId" value="View" class="btn btn-secondary btn-sm" />
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="form-group text-center">
+            <a asp-action="RegisterEvaluationClasses" class="btn btn-secondary">New Evaluation</a>
+        </div>
+    </div>
+</div>
+<br>
+
+@section Scripts{
+
+    <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables.net-bs4/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#IndexEvaluationsTable').DataTable({
+                responsive: true,
+                columnDefs: [{
+                    "targets": [0, 3],
+                    "orderable": false,
+                    "searchable": false
+                }],
+                order: [[1, 'asc']]
+            });
+        });
+    </script>
+}

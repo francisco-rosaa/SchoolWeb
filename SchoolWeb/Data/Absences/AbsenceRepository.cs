@@ -71,6 +71,7 @@ namespace SchoolWeb.Data.Absences
                     Failed = CalculatePercentage(x.HoursDiscipline, x.HoursAbsence) >= configuration.MaxPercentageAbsence ? true : false
                 });
             });
+
             return students;
         }
 

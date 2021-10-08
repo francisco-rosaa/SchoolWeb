@@ -1,0 +1,72 @@
+﻿@model SchoolWeb.Models.Evaluations.StudentCourseEvaluationsViewModel
+@{
+    ViewData["Title"] = "Student Evaluations";
+}
+
+<br>
+<br>
+<h3 class="text-center">Student Evaluations</h3>
+<br>
+<br>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <input asp-for="CourseName" class="form-control bg-secondary" style="height: 3rem; color: white;" disabled="disabled" />
+                <br>
+                <div class="row col-md-10">
+                    <div class="form-group">
+                        <img src="@Url.Content(@Model.ProfilePicturePath)" alt="Image" class="rounded-circle" style="width: 44px; height: 44px;  max-height: 100%; width: auto;" />
+                    </div>
+                    &nbsp&nbsp&nbsp&nbsp
+                    <div class="form-group font-weight-bold align-self-center">
+                        @Html.DisplayFor(modelItem => Model.FullName)
+                    </div>
+                </div>
+                <table class="table table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Evaluations.FirstOrDefault().DisciplineCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Evaluations.FirstOrDefault().DisciplineName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Evaluations.FirstOrDefault().Date)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Evaluations.FirstOrDefault().Grade)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Evaluations != null)
+                        {
+                            @foreach (var item in Model.Evaluations)
+                            {
+                                <tr>
+                                    <td class="align-middle font-weight-bold">
+                                        @Html.DisplayFor(modelItem => item.DisciplineCode)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.DisciplineName)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    <td class="align-middle font-weight-bold">
+                                        @Html.DisplayFor(modelItem => item.Grade)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-2 offset-md-5 nav-item text-center">
+            <a asp-controller="Evaluations" asp-action="StaffIndexEvaluations" class="nav-link text-dark">Back</a>
+        </div>
+    </div>
+</div>
