@@ -51,7 +51,7 @@ namespace SchoolWeb.Controllers
             {
                 foreach (var student in students)
                 {
-                    student.Courses = await _evaluationRepository.GetComboCoursesByStudent(student.UserId);
+                    student.Courses = await _evaluationRepository.GetComboCoursesByStudentAsync(student.UserId);
                 }
             }
 
@@ -125,7 +125,7 @@ namespace SchoolWeb.Controllers
                 LastName = user.LastName,
                 ProfilePicturePath = user.ProfilePicturePath,
                 CourseName = $"{course.Code}  |  {course.Name}",
-                Evaluations = await _evaluationRepository.GetStudentEvaluationsByCourse(user.Id, course.Id)
+                Evaluations = await _evaluationRepository.GetStudentEvaluationsByCourseAsync(user.Id, course.Id)
             };
 
             return View(model);
@@ -138,7 +138,7 @@ namespace SchoolWeb.Controllers
             var model = new EvaluationClassesViewModel
             {
                 ClassId = Id,
-                Classes = await _classRepository.GetComboClasses()
+                Classes = await _classRepository.GetComboClassesAsync()
             };
 
             return View(model);
@@ -155,7 +155,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("RegisterEvaluationDisciplines", "Evaluations", new { Id = model.ClassId });
             }
 
-            model.Classes = await _classRepository.GetComboClasses();
+            model.Classes = await _classRepository.GetComboClassesAsync();
             return View(model);
         }
 
@@ -193,7 +193,7 @@ namespace SchoolWeb.Controllers
                 CourseId = course.Id,
                 CourseName = $"{course.Code}  |  {course.Name}",
                 DisciplineId = disciplineId,
-                Disciplines = await _disciplineRepository.GetComboDisciplinesInCourse(course.Id)
+                Disciplines = await _disciplineRepository.GetComboDisciplinesInCourseAsync(course.Id)
             };
 
             return View(model);
@@ -210,7 +210,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("RegisterEvaluationStudents", "Evaluations", model);
             }
 
-            model.Disciplines = await _disciplineRepository.GetComboDisciplinesInCourse(model.CourseId);
+            model.Disciplines = await _disciplineRepository.GetComboDisciplinesInCourseAsync(model.CourseId);
             return View(model);
         }
 
@@ -343,6 +343,103 @@ namespace SchoolWeb.Controllers
 
                 return RedirectToAction("RegisterEvaluationStudents", "Evaluations", modelOut);
             }
+
+            return View(model);
+        }
+
+
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> StudentEvaluationsCourses(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (userName != this.User.Identity.Name)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var user = await _userHelper.GetUserByEmailAsync(userName);
+
+            if (user == null)
+            {
+                ViewBag.ErrorTitle = "No User Found";
+                ViewBag.ErrorMessage = "User doesn't exist or there was an error";
+                return View("Error");
+            }
+
+            var model = new EvaluationCoursesViewModel
+            {
+                UserId = user.Id,
+                Courses = await _evaluationRepository.GetComboCoursesByStudentAsync(user.Id)
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> StudentEvaluationsCourses(EvaluationCoursesViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByIdAsync(model.UserId);
+
+                if (user == null)
+                {
+                    ViewBag.ErrorTitle = "No User Found";
+                    ViewBag.ErrorMessage = "User doesn't exist or there was an error";
+                    return View("Error");
+                }
+
+                var course = await _courseRepository.GetByIdAsync(model.CourseId);
+
+                if (course == null)
+                {
+                    ViewBag.ErrorTitle = "No Course Found";
+                    ViewBag.ErrorMessage = "Course doesn't exist or there was an error";
+                    return View("Error");
+                }
+
+                return RedirectToAction("StudentEvaluationsCourseDetails", "Evaluations", new { userId = user.Id, courseId = course.Id });
+            }
+
+            model.Courses = await _evaluationRepository.GetComboCoursesByStudentAsync(model.UserId);
+            return View(model);
+        }
+
+
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> StudentEvaluationsCourseDetails(string userId, int courseId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (courseId == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var course = await _courseRepository.GetByIdAsync(courseId);
+
+            if (course == null)
+            {
+                ViewBag.ErrorTitle = "No Course Found";
+                ViewBag.ErrorMessage = "Course doesn't exist or there was an error";
+                return View("Error");
+            }
+
+            var model = new StudentEvaluationsCourseDetailsViewModel
+            {
+                CourseName = $"{course.Code}  |  {course.Name}  ({course.Duration}Hours)",
+                Disciplines = await _evaluationRepository.GetStudentEvaluationDisciplinesByCourseAsync(userId, courseId)
+            };
 
             return View(model);
         }

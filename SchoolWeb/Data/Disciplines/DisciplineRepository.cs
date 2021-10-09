@@ -41,7 +41,7 @@ namespace SchoolWeb.Data.Disciplines
             return await _context.Disciplines.Where(x => x.Code == code).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetComboDisciplinesInCourse(int courseId)
+        public async Task<IEnumerable<SelectListItem>> GetComboDisciplinesInCourseAsync(int courseId)
         {
             var list = new List<SelectListItem>();
 

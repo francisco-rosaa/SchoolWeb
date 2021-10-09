@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,11 +12,13 @@ namespace SchoolWeb.Data.Evaluations
     public class EvaluationRepository : GenericRepository<Evaluation>, IEvaluationRepository
     {
         private readonly DataContext _context;
+        private readonly IConfigurationRepository _configurationRepository;
 
-        public EvaluationRepository(DataContext context)
+        public EvaluationRepository(DataContext context, IConfigurationRepository configurationRepository)
             : base(context)
         {
             _context = context;
+            _configurationRepository = configurationRepository;
         }
 
         public async Task<bool> IsEvaluationsEmptyAsync()
@@ -65,7 +68,7 @@ namespace SchoolWeb.Data.Evaluations
             return students;
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetComboCoursesByStudent(string userId)
+        public async Task<IEnumerable<SelectListItem>> GetComboCoursesByStudentAsync(string userId)
         {
             var courses = Enumerable.Empty<SelectListItem>();
 
@@ -95,7 +98,7 @@ namespace SchoolWeb.Data.Evaluations
             return courses;
         }
 
-        public async Task<IEnumerable<EvaluationViewModel>> GetStudentEvaluationsByCourse(string userId, int courseId)
+        public async Task<IEnumerable<EvaluationViewModel>> GetStudentEvaluationsByCourseAsync(string userId, int courseId)
         {
             var evaluations = Enumerable.Empty<EvaluationViewModel>();
 
@@ -175,6 +178,86 @@ namespace SchoolWeb.Data.Evaluations
             });
 
             return students;
+        }
+
+        public async Task<IQueryable<StudentEvaluationDisciplines>> GetStudentEvaluationDisciplinesByCourseAsync(string userId, int courseId)
+        {
+            var evaluations = Enumerable.Empty<StudentEvaluationDisciplines>().AsQueryable();
+            var configuration = await _configurationRepository.GetConfigurationsAsync();
+
+            await Task.Run(() =>
+            {
+                evaluations =
+                (
+                    from user in _context.Users
+                    join absence in _context.Absences
+                    on user.Id equals absence.UserId
+                    join clas in _context.Classes
+                    on absence.ClassId equals clas.Id
+                    join course in _context.Courses
+                    on clas.CourseId equals course.Id
+                    join courseDiscipline in _context.CourseDisciplines
+                    on course.Id equals courseDiscipline.CourseId
+                    join discipline in _context.Disciplines
+                    on courseDiscipline.DisciplineId equals discipline.Id
+                    join evaluation in _context.Evaluations
+                    on discipline.Id equals evaluation.DisciplineId
+                    into results
+                    from matchedResults in results.DefaultIfEmpty()
+                    where user.Id == userId && course.Id == courseId
+                    select new
+                    {
+                        DiscipCode = discipline.Code,
+                        DiscipName = discipline.Name,
+                        DiscipDuration = discipline.Duration,
+                        HoursAbsence = (
+                            from absence in _context.Absences
+                            where absence.UserId == user.Id && absence.ClassId == clas.Id && absence.DisciplineId == discipline.Id
+                            select absence.Duration
+                            ).Sum(),
+                        HoursDiscipline = (
+                            from discipline in _context.Disciplines
+                            where discipline.Id == discipline.Id
+                            select discipline.Duration
+                            ).FirstOrDefault(),
+                        Evaluation = (
+                            from evaluation in _context.Evaluations
+                            where evaluation.UserId == user.Id && evaluation.ClassId == clas.Id && evaluation.DisciplineId == discipline.Id
+                            select new
+                            {
+                                Date = evaluation.Date,
+                                Grade = evaluation.Grade
+                            }).First()
+                    }
+                ).Select(x => new StudentEvaluationDisciplines
+                {
+                    Code = x.DiscipCode,
+                    Name = x.DiscipName,
+                    Duration = x.DiscipDuration,
+                    HoursAbsence = x.HoursAbsence,
+                    PercentageAbsence = CalculatePercentage(x.HoursDiscipline, x.HoursAbsence),
+                    Date = x.Evaluation.Date,
+                    Grade = x.Evaluation.Grade,
+                    FailedAbsence = CalculatePercentage(x.HoursDiscipline, x.HoursAbsence) >= configuration.MaxPercentageAbsence ? true : false,
+                    FailedGrade = x.Evaluation.Grade < 10 
+                }).Distinct();
+            });
+
+            return evaluations;
+        }
+
+        private static int CalculatePercentage(int hoursDiscipline, int hoursAbsence)
+        {
+            if (hoursDiscipline == 0 && hoursAbsence == 0)
+            {
+                return 0;
+            }
+
+            double total = Convert.ToDouble(hoursDiscipline);
+            double partial = Convert.ToDouble(hoursAbsence);
+            double percentage = 100 / (total / partial);
+
+            return Convert.ToInt32(percentage);
         }
     }
 }

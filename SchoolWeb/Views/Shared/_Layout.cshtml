@@ -74,6 +74,16 @@
                             </li>
                         }
 
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Student"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">School</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Evaluations" asp-action="StudentEvaluationsCourses" asp-route-userName="@this.User.Identity.Name">Evaluations</a></li>
+                                </ul>
+                            </li>
+                        }
+
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
                         {
                         }

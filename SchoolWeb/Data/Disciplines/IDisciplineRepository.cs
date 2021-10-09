@@ -15,6 +15,6 @@ namespace SchoolWeb.Data.Disciplines
 
         Task<Discipline> GetByCodeAsync(string code);
 
-        Task<IEnumerable<SelectListItem>> GetComboDisciplinesInCourse(int courseId);
+        Task<IEnumerable<SelectListItem>> GetComboDisciplinesInCourseAsync(int courseId);
     }
 }

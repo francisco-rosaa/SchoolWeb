@@ -15,10 +15,12 @@ namespace SchoolWeb.Data.Evaluations
 
         Task<IList<StudentsEvaluationIndexViewModel>> GetStudentEvaluationsIndexAsync();
 
-        Task<IEnumerable<SelectListItem>> GetComboCoursesByStudent(string userId);
+        Task<IEnumerable<SelectListItem>> GetComboCoursesByStudentAsync(string userId);
 
-        Task<IEnumerable<EvaluationViewModel>> GetStudentEvaluationsByCourse(string userId, int courseId);
+        Task<IEnumerable<EvaluationViewModel>> GetStudentEvaluationsByCourseAsync(string userId, int courseId);
 
         Task<IQueryable<StudentEvaluation>> GetClassStudentEvaluationsAsync(int classId, int disciplineId);
+
+        Task<IQueryable<StudentEvaluationDisciplines>> GetStudentEvaluationDisciplinesByCourseAsync(string userId, int courseId);
     }
 }

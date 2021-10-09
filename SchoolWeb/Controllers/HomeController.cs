@@ -50,7 +50,7 @@ namespace SchoolWeb.Controllers
                 ViewBag.Message = message;
             }
 
-            var configurations = await _configurationRepository.GetConfigurations();
+            var configurations = await _configurationRepository.GetConfigurationsAsync();
 
             if (configurations == null)
             {
@@ -76,7 +76,7 @@ namespace SchoolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isSuccess = await _configurationRepository.SaveConfigurations(model.ClassMaxStudents, model.MaxPercentageAbsence);
+                var isSuccess = await _configurationRepository.SaveConfigurationsAsync(model.ClassMaxStudents, model.MaxPercentageAbsence);
 
                 if (isSuccess)
                 {

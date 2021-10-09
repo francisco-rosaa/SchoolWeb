@@ -154,7 +154,7 @@ namespace SchoolWeb.Controllers
                     return View("Error");
                 }
 
-                var configuration = await _configurationRepository.GetConfigurations();
+                var configuration = await _configurationRepository.GetConfigurationsAsync();
                 int studentsInClassDb = await _classStudentRepository.GetClassStudentsTotalAsync(model.ClassId);
                 int studentsInClassModel = model.StudentsSelectable.Where(x => x.IsSelected).Count();
 

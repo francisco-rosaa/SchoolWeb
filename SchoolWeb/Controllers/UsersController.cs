@@ -414,6 +414,13 @@ namespace SchoolWeb.Controllers
 
             var user = await _userHelper.GetUserByIdAsync(Id);
 
+            if (user == null)
+            {
+                ViewBag.ErrorTitle = "No User Found";
+                ViewBag.ErrorMessage = "User doesn't exist or there was an error";
+                return View("Error");
+            }
+
             var model = new EditProfileViewModel
             {
                 Genders = _genderRepository.GetComboGenders(),

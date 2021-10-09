@@ -13,16 +13,16 @@ namespace SchoolWeb.Data
             _context = context;
         }
 
-        public async Task<Configuration> GetConfigurations()
+        public async Task<Configuration> GetConfigurationsAsync()
         {
             return await _context.Configurations.FirstOrDefaultAsync();
         }
 
-        public async Task<bool> SaveConfigurations(int maxStudents, int maxPercentAbsence)
+        public async Task<bool> SaveConfigurationsAsync(int maxStudents, int maxPercentAbsence)
         {
             bool isSuccess = false;
 
-            var configurations = await GetConfigurations();
+            var configurations = await GetConfigurationsAsync();
 
             if (configurations != null)
             {

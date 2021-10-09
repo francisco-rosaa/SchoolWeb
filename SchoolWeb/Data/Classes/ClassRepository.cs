@@ -41,7 +41,7 @@ namespace SchoolWeb.Data.Classes
             return await _context.Classes.Where(x => x.Code == code).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetComboClasses()
+        public async Task<IEnumerable<SelectListItem>> GetComboClassesAsync()
         {
             var list = new List<SelectListItem>();
 

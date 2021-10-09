@@ -15,6 +15,6 @@ namespace SchoolWeb.Data.Classes
 
         Task<Class> GetByCodeAsync(string code);
 
-        Task<IEnumerable<SelectListItem>> GetComboClasses();
+        Task<IEnumerable<SelectListItem>> GetComboClassesAsync();
     }
 }

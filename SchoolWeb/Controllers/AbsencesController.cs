@@ -43,7 +43,7 @@ namespace SchoolWeb.Controllers
             var model = new AbsenceClassesViewModel
             {
                 ClassId = Id,
-                Classes = await _classRepository.GetComboClasses()
+                Classes = await _classRepository.GetComboClassesAsync()
             };
 
             return View(model);
@@ -60,7 +60,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("RegisterAbsenceDisciplines", "Absences", new { Id = model.ClassId });
             }
 
-            model.Classes = await _classRepository.GetComboClasses();
+            model.Classes = await _classRepository.GetComboClassesAsync();
             return View(model);
         }
 
@@ -98,7 +98,7 @@ namespace SchoolWeb.Controllers
                 CourseId = course.Id,
                 CourseName = $"{course.Code}  |  {course.Name}",
                 DisciplineId = disciplineId,
-                Disciplines = await _disciplineRepository.GetComboDisciplinesInCourse(course.Id)
+                Disciplines = await _disciplineRepository.GetComboDisciplinesInCourseAsync(course.Id)
             };
 
             return View(model);
@@ -115,7 +115,7 @@ namespace SchoolWeb.Controllers
                 return RedirectToAction("RegisterAbsenceStudents", "Absences", model);
             }
 
-            model.Disciplines = await _disciplineRepository.GetComboDisciplinesInCourse(model.CourseId);
+            model.Disciplines = await _disciplineRepository.GetComboDisciplinesInCourseAsync(model.CourseId);
             return View(model);
         }
 

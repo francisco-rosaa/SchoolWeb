@@ -28,7 +28,7 @@ namespace SchoolWeb.Data.Absences
         public async Task<IQueryable<StudentAbsence>> GetClassStudentAbsencesAsync(int classId, int disciplineId)
         {
             var students = Enumerable.Empty<StudentAbsence>().AsQueryable();
-            var configuration = await _configurationRepository.GetConfigurations();
+            var configuration = await _configurationRepository.GetConfigurationsAsync();
 
             await Task.Run(() =>
             {
