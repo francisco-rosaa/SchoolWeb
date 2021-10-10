@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Home;
 
 namespace SchoolWeb.Data.Disciplines
 {
@@ -16,5 +18,7 @@ namespace SchoolWeb.Data.Disciplines
         Task<Discipline> GetByCodeAsync(string code);
 
         Task<IEnumerable<SelectListItem>> GetComboDisciplinesInCourseAsync(int courseId);
+
+        Task<IQueryable<HomeDisciplineViewModel>> GetHomeDisciplinesInCourseAsync(int courseId);
     }
 }

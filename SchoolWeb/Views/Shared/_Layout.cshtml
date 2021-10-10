@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/ico" href="~/images/favicon.ico">
     <title>@ViewData["Title"] &nbsp|&nbsp SchoolWeb</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css" />
@@ -11,7 +12,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3 py-4" style="background-color: #0D98BA; ">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top navbar-dark border-bottom box-shadow mb-3 py-4" style="background-color: #0D98BA;">
             <div class="container">
                 <a class="navbar-brand text-nowrap" asp-area="" asp-controller="Home" asp-action="Index">
                     <i style="font-size:30px" class="fa">Schoo&#xf19d;Web</i>
@@ -125,6 +126,10 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <br>
+            <br>
+            <br>
+            <br>
             @RenderBody()
         </main>
     </div>

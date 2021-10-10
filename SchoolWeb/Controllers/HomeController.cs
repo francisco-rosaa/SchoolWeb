@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolWeb.Data;
+using SchoolWeb.Data.Classes;
+using SchoolWeb.Data.Courses;
+using SchoolWeb.Data.Disciplines;
 using SchoolWeb.Helpers;
 using SchoolWeb.Models.Configurations;
+using SchoolWeb.Models.Home;
 
 namespace SchoolWeb.Controllers
 {
@@ -11,11 +15,25 @@ namespace SchoolWeb.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly IConfigurationRepository _configurationRepository;
+        private readonly ICourseRepository _courseRepository;
+        private readonly IClassRepository _classRepository;
+        private readonly IDisciplineRepository _disciplineRepository;
 
-        public HomeController(IUserHelper userHelper, IConfigurationRepository configurationRepository)
+        public HomeController
+            (
+                IUserHelper userHelper,
+                IConfigurationRepository configurationRepository,
+                ICourseRepository courseRepository,
+                IClassRepository classRepository,
+                IDisciplineRepository disciplineRepository
+                
+            )
         {
             _userHelper = userHelper;
             _configurationRepository = configurationRepository;
+            _courseRepository = courseRepository;
+            _classRepository = classRepository;
+            _disciplineRepository = disciplineRepository;
         }
 
 
@@ -32,7 +50,29 @@ namespace SchoolWeb.Controllers
                 }
             }
 
-            return View();
+            var model = new HomeCoursesClassesViewModel
+            {
+                Courses = await _courseRepository.GetHomeCoursesAsync(),
+                Classes = await _classRepository.GetHomeClassesAsync()
+            };
+
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> HomeCourseDisciplines(int Id)
+        {
+            if (Id == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var model = new HomeCourseDisciplinesViewModel
+            {
+                Disciplines = await _disciplineRepository.GetHomeDisciplinesInCourseAsync(Id)
+            };
+
+            return View(model);
         }
 
 

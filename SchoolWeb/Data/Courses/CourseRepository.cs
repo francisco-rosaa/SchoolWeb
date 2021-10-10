@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Home;
 
 namespace SchoolWeb.Data.Courses
 {
@@ -56,6 +57,26 @@ namespace SchoolWeb.Data.Courses
             });
 
             return list;
+        }
+
+        public async Task<IQueryable<HomeCourseViewModel>> GetHomeCoursesAsync()
+        {
+            var courses = Enumerable.Empty<HomeCourseViewModel>().AsQueryable();
+
+            await Task.Run(() =>
+            {
+                courses = _context.Courses
+                    .OrderBy(x => x.Name)
+                    .Select(x => new HomeCourseViewModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Area = x.Area,
+                        Duration = x.Duration
+                    });
+            });
+
+            return courses;
         }
     }
 }

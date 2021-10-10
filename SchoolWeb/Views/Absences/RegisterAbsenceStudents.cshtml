@@ -97,7 +97,7 @@
                     </div>
                     <div class="text-danger text-center mr-4" asp-validation-summary="ModelOnly"></div>
                 </div>
-             </div>
+            </div>
         </form>
         <div class="col-md-2 offset-md-5 nav-item text-center">
             <a asp-controller="Absences" asp-action="RegisterAbsenceDisciplines" asp-route-Id="@Model.ClassId" asp-route-disciplineId="@Model.DisciplineId" class="nav-link text-dark">Back</a>
@@ -114,11 +114,11 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script type="text/javascript">
+    <script type="text/javascript">
         $('.date').datepicker({
             format: 'dd/mm/yyyy',
             orientation: "bottom",
             autoclose: true
         });
-</script>
+    </script>
 }

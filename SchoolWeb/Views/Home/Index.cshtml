@@ -1,11 +1,121 @@
-﻿@{
+﻿@model SchoolWeb.Models.Home.HomeCoursesClassesViewModel
+@{
     ViewData["Title"] = "Home";
+    <style type="text/css" media="screen">
+        .table-hover tbody tr:hover td {
+            background-color: #f5f3e3;
+        }
+    </style>
 }
 
 <br>
-<br>
-<h3 class="text-center">Welcome</h3>
+<div>
+    <img src="~/images/banner-welcome.jpg" alt="Image" class="embed-responsive" />
+</div>
 <br>
 <div>
-    <p class="text-center">Welcome to SchoolWeb</p>
+    <img src="~/images/banner-courses.jpg" alt="Image" class="embed-responsive" />
 </div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <table class="table table-hover table-responsive table-borderless" id="HomeCourses">
+                    <thead>
+                        <tr>
+                            <th>
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Courses.FirstOrDefault().Area)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Courses.FirstOrDefault().Duration)
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Courses != null)
+                        {
+                            @foreach (var item in Model.Courses)
+                            {
+                                <tr>
+                                    <td class="align-middle font-weight-bold">
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Area)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Duration)
+                                    </td>
+                                    <td class="align-middle">
+                                        <input type="hidden" asp-for="@item.Id" />
+                                        <a asp-action="HomeCourseDisciplines" asp-route-id="@item.Id" class="btn btn-secondary">Disciplines</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<div>
+    <img src="~/images/banner-classes.jpg" alt="Image" class="embed-responsive" />
+</div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <table class="table table-hover table-responsive table-borderless" id="HomeCourses">
+                    <thead>
+                        <tr>
+                            <th>
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Classes.FirstOrDefault().Course)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Classes.FirstOrDefault().StartDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Classes.FirstOrDefault().EndDate)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Classes != null)
+                        {
+                            @foreach (var item in Model.Classes)
+                            {
+                                <tr>
+                                    <td class="align-middle font-weight-bold">
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.Course)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td class="align-middle">
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>

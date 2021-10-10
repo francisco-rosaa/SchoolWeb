@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Home;
 
 namespace SchoolWeb.Data.Courses
 {
@@ -16,5 +18,7 @@ namespace SchoolWeb.Data.Courses
         Task<Course> GetByCodeAsync(string code);
 
         IEnumerable<SelectListItem> GetComboCourses();
+
+        Task<IQueryable<HomeCourseViewModel>> GetHomeCoursesAsync();
     }
 }

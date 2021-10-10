@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data.Entities;
+using SchoolWeb.Models.Home;
 
 namespace SchoolWeb.Data.Classes
 {
@@ -63,6 +64,28 @@ namespace SchoolWeb.Data.Classes
             });
 
             return list;
+        }
+
+        public async Task<IQueryable<HomeClassViewModel>> GetHomeClassesAsync()
+        {
+            var classes = Enumerable.Empty<HomeClassViewModel>().AsQueryable();
+
+            await Task.Run(() =>
+            {
+                classes = _context.Classes
+                    .Include(x => x.Course)
+                    .Where(x => x.CourseId == x.Id)
+                    .OrderBy(x => x.Name)
+                    .Select(x => new HomeClassViewModel
+                    {
+                        Name = x.Name,
+                        Course = x.Course.Name,
+                        StartDate = x.StartDate,
+                        EndDate = x.EndDate
+                    });
+            });
+
+            return classes;
         }
     }
 }
