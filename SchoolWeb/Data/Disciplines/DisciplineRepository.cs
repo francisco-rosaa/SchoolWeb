@@ -76,7 +76,7 @@ namespace SchoolWeb.Data.Disciplines
             {
                 disciplines = _context.CourseDisciplines
                     .Include(x => x.Discipline)
-                    .Where(x => x.DisciplineId == x.Id && x.CourseId == courseId)
+                    .Where(x => x.DisciplineId == x.Discipline.Id && x.CourseId == courseId)
                     .OrderBy(x => x.Discipline.Name)
                     .Select(x => new HomeDisciplineViewModel
                     {
