@@ -62,7 +62,7 @@
                     <div class="form-group col-md-4">
                         <label asp-for="BirthDate" class="control-label"></label>
                         <div class="input-group date" data-provide="datepicker">
-                            <input type="text" asp-for="BirthDate" class="form-control">
+                            <input type="text" asp-for="BirthDate" class="form-control" value="">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                             </div>
@@ -126,9 +126,6 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script type="text/javascript">
-        if (document.getElementById("BirthDate").value === "01/01/0001 00:00:00") {
-            document.getElementById("BirthDate").value = "";
-        }
         $('.date').datepicker({
             format: 'dd/mm/yyyy',
             orientation: "bottom",

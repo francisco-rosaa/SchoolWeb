@@ -32,7 +32,7 @@
                 <div class="form-group col-md-6">
                     <label asp-for="StartDate" class="control-label"></label>
                     <div class="input-group date" data-provide="datepicker">
-                        <input type="text" asp-for="StartDate" class="form-control">
+                        <input type="text" asp-for="StartDate" class="form-control" value="">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
@@ -42,7 +42,7 @@
                 <div class="form-group col-md-6">
                     <label asp-for="EndDate" class="control-label"></label>
                     <div class="input-group date" data-provide="datepicker">
-                        <input type="text" asp-for="EndDate" class="form-control">
+                        <input type="text" asp-for="EndDate" class="form-control" value="">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
@@ -72,12 +72,6 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script type="text/javascript">
-        if (document.getElementById("StartDate").value === "01/01/0001 00:00:00") {
-            document.getElementById("StartDate").value = "";
-        }
-        if (document.getElementById("EndDate").value === "01/01/0001 00:00:00") {
-            document.getElementById("EndDate").value = "";
-        }
         $('.date').datepicker({
             format: 'dd/mm/yyyy',
             orientation: "bottom",
