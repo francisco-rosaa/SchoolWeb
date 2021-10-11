@@ -13,6 +13,13 @@
     <img src="~/images/banner-welcome2.jpg" alt="Image" class="embed-responsive" />
 </div>
 <br>
+<br>
+<div class="col-md-12">
+    <p>
+        Our disciplines cover a wide range of topics but some themes include software applications, hardware, programming, security, business applications, design, artificial intelligence, databases, medical records, and others.
+    </p>
+</div>
+<br>
 <div>
     <img src="~/images/banner-disciplines.jpg" alt="Image" class="embed-responsive" />
 </div>
@@ -39,8 +46,8 @@
                         {
                             @foreach (var item in Model.Disciplines)
                             {
-                                <tr>
-                                    <td class="align-middle font-weight-bold">
+                                <tr style="user-select: none;">
+                                    <td class="align-middle font-weight-bold h5">
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
                                     <td class="align-middle">

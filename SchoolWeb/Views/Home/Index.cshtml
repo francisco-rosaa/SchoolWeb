@@ -13,6 +13,13 @@
     <img src="~/images/banner-welcome.jpg" alt="Image" class="embed-responsive" />
 </div>
 <br>
+<br>
+<div class="col-md-12">
+    <p>
+        Our courses are an excellent choice to help advance your career. Whether you are seeking professional development, new skills, or a new career. These courses can help you become a more competitive and valuable employee with important skills.
+    </p>
+</div>
+<br>
 <div>
     <img src="~/images/banner-courses.jpg" alt="Image" class="embed-responsive" />
 </div>
@@ -41,8 +48,8 @@
                         {
                             @foreach (var item in Model.Courses)
                             {
-                                <tr>
-                                    <td class="align-middle font-weight-bold">
+                                <tr style="user-select: none;">
+                                    <td class="align-middle font-weight-bold h5">
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
                                     <td class="align-middle">
@@ -65,6 +72,12 @@
     </div>
 </div>
 <br>
+<br>
+<div class="col-md-12">
+    <p>
+        Classes range from a week to a year and can offer certification or diplomas. If you are considering taking our courses, then scroll through the classes to find one that will help you meet your professional goals and advance your career!
+    </p>
+</div>
 <br>
 <div>
     <img src="~/images/banner-classes.jpg" alt="Image" class="embed-responsive" />
@@ -95,8 +108,8 @@
                         {
                             @foreach (var item in Model.Classes)
                             {
-                                <tr>
-                                    <td class="align-middle font-weight-bold">
+                                <tr style="user-select: none;">
+                                    <td class="align-middle font-weight-bold h5">
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
                                     <td class="align-middle">
