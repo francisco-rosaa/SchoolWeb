@@ -54,7 +54,7 @@ namespace SchoolWeb.Data.Disciplines
                     .Select(x => new SelectListItem
                     {
                         Text = $"{x.Discipline.Code}  |  {x.Discipline.Name}",
-                        Value = x.Id.ToString()
+                        Value = x.Discipline.Id.ToString()
                     })
                     .ToList();
 
