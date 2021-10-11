@@ -74,7 +74,7 @@ namespace SchoolWeb.Data.Classes
             {
                 classes = _context.Classes
                     .Include(x => x.Course)
-                    .Where(x => x.CourseId == x.Id)
+                    .Where(x => x.CourseId == x.Course.Id)
                     .OrderBy(x => x.Name)
                     .Select(x => new HomeClassViewModel
                     {
