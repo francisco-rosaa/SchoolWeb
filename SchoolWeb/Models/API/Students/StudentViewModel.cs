@@ -2,7 +2,7 @@
 
 namespace SchoolWeb.Models.API.Students
 {
-    public class StudentsViewModel
+    public class StudentViewModel
     {
         public string Id { get; set; }
 

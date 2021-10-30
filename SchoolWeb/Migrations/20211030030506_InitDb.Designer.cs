@@ -10,7 +10,7 @@ using SchoolWeb.Data;
 namespace SchoolWeb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211004151544_InitDb")]
+    [Migration("20211030030506_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

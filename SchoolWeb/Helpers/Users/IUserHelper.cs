@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Models;
+using SchoolWeb.Models.API.Students;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -66,5 +67,7 @@ namespace SchoolWeb.Helpers
         Task<IEnumerable<EditStudentsViewModel>> GetStudentsListAsync();
 
         Task DeleteUserAsync(User user);
+
+        Task<StudentViewModel> GetStudentViewModelAsync(string userName);
     }
 }

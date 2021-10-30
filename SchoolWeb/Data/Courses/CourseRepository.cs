@@ -78,5 +78,43 @@ namespace SchoolWeb.Data.Courses
 
             return courses;
         }
+
+        public async Task<IQueryable<Course>> GetStudentCourses(string userId)
+        {
+            var courses = Enumerable.Empty<Course>().AsQueryable();
+
+            await Task.Run(() =>
+            {
+                courses =
+                (
+                    from user in _context.Users
+                    join classStudent in _context.ClassStudents
+                    on user.Id equals classStudent.UserId
+                    join clas in _context.Classes
+                    on classStudent.ClassId equals clas.Id
+                    join course in _context.Courses
+                    on clas.CourseId equals course.Id
+                    where user.Id == userId
+                    select new
+                    {
+                        Id = course.Id,
+                        Code = course.Code,
+                        Name = course.Name,
+                        Area = course.Area,
+                        Duration = course.Duration
+                    }
+                ).Select(x => new Course
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name,
+                    Area = x.Area,
+                    Duration = x.Duration
+                });
+            });
+
+            return courses;
+        }
+
     }
 }

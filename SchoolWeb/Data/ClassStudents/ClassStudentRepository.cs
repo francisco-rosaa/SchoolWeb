@@ -137,9 +137,9 @@ namespace SchoolWeb.Data.ClassStudents
             return studentsInClass;
         }
 
-        public async Task<IQueryable<StudentsViewModel>> GetStudentsByClassCodeAsync(string classCode)
+        public async Task<IQueryable<StudentViewModel>> GetStudentsByClassCodeAsync(string classCode)
         {
-            var students = Enumerable.Empty<StudentsViewModel>().AsQueryable();
+            var students = Enumerable.Empty<StudentViewModel>().AsQueryable();
 
             await Task.Run(() =>
             {
@@ -157,7 +157,7 @@ namespace SchoolWeb.Data.ClassStudents
                         where role.Name == "Student" && clas.Code == classCode
                         select user
                     )
-                    .Select(x => new StudentsViewModel
+                    .Select(x => new StudentViewModel
                     {
                         Id = x.Id,
                         FirstName = x.FirstName,

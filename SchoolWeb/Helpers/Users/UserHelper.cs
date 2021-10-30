@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SchoolWeb.Data;
 using SchoolWeb.Data.Entities;
 using SchoolWeb.Models;
+using SchoolWeb.Models.API.Students;
 
 namespace SchoolWeb.Helpers
 {
@@ -323,6 +324,34 @@ namespace SchoolWeb.Helpers
         public async Task DeleteUserAsync(User user)
         {
             await _userManager.DeleteAsync(user);
+        }
+
+        public async Task<StudentViewModel> GetStudentViewModelAsync(string userName)
+        {
+            var student = new StudentViewModel();
+
+            await Task.Run(() =>
+            {
+                student = 
+                _context.Users
+                .Where(x => x.UserName == userName)
+                .Select(x => new StudentViewModel
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Gender = x.Gender.Name,
+                    Qualification = x.Qualification.Name,
+                    CcNumber = x.CcNumber,
+                    BirthDate = x.BirthDate,
+                    Address = x.Address,
+                    City = x.City,
+                    PhoneNumber = x.PhoneNumber,
+                    Email = x.Email,
+                }).FirstOrDefault();
+            });
+
+            return student;
         }
     }
 }

@@ -21,6 +21,6 @@ namespace SchoolWeb.Data.ClassStudents
 
         Task<int> GetClassStudentsTotalAsync(int classId);
 
-        Task<IQueryable<StudentsViewModel>> GetStudentsByClassCodeAsync(string classCode);
+        Task<IQueryable<StudentViewModel>> GetStudentsByClassCodeAsync(string classCode);
     }
 }

@@ -20,5 +20,7 @@ namespace SchoolWeb.Data.Courses
         IEnumerable<SelectListItem> GetComboCourses();
 
         Task<IQueryable<HomeCourseViewModel>> GetHomeCoursesAsync();
+
+        Task<IQueryable<Course>> GetStudentCourses(string userId);
     }
 }

@@ -332,47 +332,39 @@ namespace SchoolWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
-
                 if (user != null)
                 {
-                    var isUserAdmin = await _userHelper.IsUserInRoleAsync(user, "Admin");
-                    var isUserStaff = await _userHelper.IsUserInRoleAsync(user, "Staff");
-                    
-                    if (isUserAdmin || isUserStaff)
-                    {
-                        var result = await _userHelper.ValidatePasswordAsync(user, model.Password);
+                    var result = await _userHelper.ValidatePasswordAsync(
+                        user,
+                        model.Password);
 
-                        if (result.Succeeded)
+                    if (result.Succeeded)
+                    {
+                        var claims = new[]
                         {
-                            var claims = new[]
-                            {
                             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         };
 
-                            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
-                            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(
+                            _configuration["Tokens:Issuer"],
+                            _configuration["Tokens:Audience"],
+                            claims,
+                            expires: DateTime.UtcNow.AddDays(15),
+                            signingCredentials: credentials);
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        };
 
-                            var token = new JwtSecurityToken
-                                (
-                                    _configuration["Tokens:Issuer"],
-                                    _configuration["Tokens:Audience"],
-                                    claims,
-                                    expires: DateTime.UtcNow.AddDays(7),
-                                    signingCredentials: credentials
-                                );
+                        return this.Created(string.Empty, results);
 
-                            var results = new
-                            {
-                                token = new JwtSecurityTokenHandler().WriteToken(token),
-                                expiration = token.ValidTo
-                            };
-
-                            return Created(string.Empty, results);
-                        }
                     }
                 }
             }
