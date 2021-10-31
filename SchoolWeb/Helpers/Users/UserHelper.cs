@@ -348,6 +348,8 @@ namespace SchoolWeb.Helpers
                     City = x.City,
                     PhoneNumber = x.PhoneNumber,
                     Email = x.Email,
+                    ProfilePicturePath = x.ProfilePicturePath,
+                    PicturePath = x.PicturePath
                 }).FirstOrDefault();
             });
 
